@@ -1,6 +1,14 @@
 import React from 'react';
-import {View, StyleSheet, Modal, Text, Dimensions} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Modal,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
 import {PrimaryColor} from '../constants/Theme';
+import {TextInput} from 'react-native-gesture-handler';
 
 const {width, height} = Dimensions.get('window');
 
@@ -9,7 +17,16 @@ function AddFolderComponent() {
     <Modal transparent={true} animationType="slide">
       <View style={styles.container}>
         <View style={styles.formContainer}>
-          <Text>Enter Folder Name</Text>
+          <Text style={styles.heading}>ENTER FOLDER NAME</Text>
+          <TextInput placeholder="Enter folder name..." style={styles.input} />
+          <View style={styles.btnContainer}>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.btnText}>CANCEL</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.btn}>
+              <Text style={styles.btnText}>CREATE</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     </Modal>
@@ -28,9 +45,42 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     width: width - 30,
-    height: height / 3,
+    height: height / 4,
     backgroundColor: PrimaryColor,
     alignSelf: 'center',
     borderRadius: 10,
+    padding: 15,
+    paddingTop: 10,
+    justifyContent: 'center',
+  },
+  heading: {
+    fontSize: 20,
+    color: '#fff',
+    marginBottom: 5,
+  },
+  input: {
+    width: '100%',
+    height: 40,
+    backgroundColor: '#e5e5e5',
+    marginTop: 10,
+    borderRadius: 5,
+  },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 20,
+    width: '100%',
+  },
+  btn: {
+    width: '47%',
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#6d8c79',
+    borderRadius: 5,
+  },
+  btnText: {
+    fontSize: 17,
+    color: '#fff',
   },
 });
