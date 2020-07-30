@@ -8,6 +8,7 @@ import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
 import {PrimaryColor} from '../constants/Theme';
+import Pdf from '../screens/Pdf';
 
 const Tab = createBottomTabNavigator();
 
@@ -82,6 +83,11 @@ export default function MainStack() {
         <Stack.Screen
           component={Folder}
           name="folder"
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          component={Pdf}
+          name="pdf"
           options={{headerShown: false}}
         />
       </Stack.Navigator>

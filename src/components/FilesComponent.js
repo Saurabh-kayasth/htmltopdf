@@ -16,9 +16,9 @@ import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 const {width, height} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
-function FolderData(props) {
+function FilesData(props) {
   const goToFolder = () => {
-    props.navigation.navigate('folder');
+    props.navigation.navigate('pdf');
   };
 
   const renderRightAction = (progress, dragX) => {
@@ -48,10 +48,10 @@ function FolderData(props) {
       fricton={2}>
       <TouchableWithoutFeedback onPress={() => goToFolder()}>
         <View style={styles.folderContainer}>
-          <Icon name="folder" color={PrimaryColor} size={50} />
+          <Icon name="file" color={PrimaryColor} size={50} />
           <View style={styles.data}>
-            <Text style={styles.folderName}>Folder Name</Text>
-            <Text style={styles.description}>Last Added File...</Text>
+            <Text style={styles.folderName}>File Name</Text>
+            <Text style={styles.description}>Sheduled at 02:24</Text>
           </View>
           <View style={styles.dateTime}>
             <Text style={styles.dateTimeText}>29 Feb</Text>
@@ -63,21 +63,21 @@ function FolderData(props) {
   );
 }
 
-function FoldersComponent(props) {
+function FilesComponent(props) {
   const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <View style={styles.container}>
       <FlatList
         data={arr}
         renderItem={({item, index}) => {
-          return <FolderData navigation={props.navigation} />;
+          return <FilesData navigation={props.navigation} />;
         }}
       />
     </View>
   );
 }
 
-export default FoldersComponent;
+export default FilesComponent;
 
 const styles = StyleSheet.create({
   container: {

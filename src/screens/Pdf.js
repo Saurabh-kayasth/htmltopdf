@@ -1,25 +1,25 @@
 import React from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import HeaderCompponent from '../components/HeaderComponent';
-import FilesComponent from '../components/FilesComponent';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PrimaryColor} from '../constants/Theme';
+import PdfFileComponent from '../components/PdfFileComponent';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-function Folder(props) {
-  const addFile = () => {};
+function Pdf() {
+  const shareFile = () => {};
 
   return (
     <View style={styles.container}>
-      <HeaderCompponent header={'Folder_name'} />
-      <FilesComponent navigation={props.navigation} />
-      <TouchableOpacity style={styles.btn} onPress={() => addFile()}>
-        <Icon name="file-plus" size={25} color="#fff" />
+      <HeaderCompponent header={'Pdf_name'} />
+      <PdfFileComponent />
+      <TouchableOpacity style={styles.btn} onPress={() => shareFile()}>
+        <Icon name="share" size={25} color="#fff" />
       </TouchableOpacity>
     </View>
   );
 }
 
-export default Folder;
+export default Pdf;
 
 const styles = StyleSheet.create({
   container: {
