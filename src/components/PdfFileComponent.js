@@ -1,6 +1,15 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Dimensions, Text} from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Dimensions,
+  Text,
+  Share,
+  TouchableOpacity,
+} from 'react-native';
 import Pdf from 'react-native-pdf';
+import {PrimaryColor} from '../constants/Theme';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const {width, height} = Dimensions.get('window');
 
@@ -10,6 +19,26 @@ function PdfFileComponent() {
   const source = {
     uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf',
     cache: true,
+  };
+
+  const share = () => {
+    var shareOptions = {
+      title: 'Covid-19',
+      message:
+        'File Name : ' +
+        'userName' +
+        '\n' +
+        'props.item.message' +
+        '\nCredit : Covid Tracker',
+      // message: video.content + " " + "http://freehitnews.com?link=" + video.media_uri,
+      // url: this.props.item.img_url,
+      // subject: this.props.item.img_url, //  for email
+    };
+    Share.share(
+      Object.assign(shareOptions, {
+        social: 'whatsapp',
+      }),
+    );
   };
 
   return (
@@ -41,6 +70,9 @@ function PdfFileComponent() {
           <Text style={styles.text}>{currentPageNumber}</Text>
         </View>
       </View>
+      <TouchableOpacity style={styles.btn} onPress={() => share()}>
+        <Icon name="share" size={25} color="#fff" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -74,5 +106,17 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
+  },
+  btn: {
+    height: 55,
+    width: 55,
+    borderRadius: 55 / 2,
+    backgroundColor: PrimaryColor,
+    elevation: 10,
+    position: 'absolute',
+    bottom: 30,
+    right: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
