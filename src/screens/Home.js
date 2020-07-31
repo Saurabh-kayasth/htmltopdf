@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {View, StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import HeaderCompponent from '../components/HeaderComponent';
 import FoldersComponent from '../components/FoldersComponent';
 import {PrimaryColor} from '../constants/Theme';
@@ -21,7 +21,7 @@ function Home(props) {
       <TouchableOpacity style={styles.btn} onPress={() => addFolder()}>
         <Icon name="folder-plus" size={25} color="#fff" />
       </TouchableOpacity>
-      {modalVisible && <AddFolderComponent />}
+      {modalVisible && <AddFolderComponent setModalVisible={setModalVisible} />}
     </View>
   );
 }

@@ -1,12 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import HeaderCompponent from '../components/HeaderComponent';
 import FilesComponent from '../components/FilesComponent';
+import AddFileComponent from '../components/AddFileComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PrimaryColor} from '../constants/Theme';
 
 function Folder(props) {
-  const addFile = () => {};
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const addFile = () => {
+    setModalVisible(true);
+  };
 
   return (
     <View style={styles.container}>
@@ -15,6 +20,7 @@ function Folder(props) {
       <TouchableOpacity style={styles.btn} onPress={() => addFile()}>
         <Icon name="file-plus" size={25} color="#fff" />
       </TouchableOpacity>
+      {modalVisible && <AddFileComponent setModalVisible={setModalVisible} />}
     </View>
   );
 }
