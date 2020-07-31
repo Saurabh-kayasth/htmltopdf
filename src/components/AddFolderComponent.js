@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,13 +10,26 @@ import {
 } from 'react-native';
 import {PrimaryColor} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
+import DataModel from '../context/DataModel';
 
 const {width} = Dimensions.get('window');
 
 function AddFolderComponent(props) {
+  const [folderName, setFolderName] = useState(String);
   const clodeModal = () => {
     props.setModalVisible(false);
   };
+
+  const createFolder = () => {
+    const dataModel = new DataModel();
+    const folderObj = {};
+    folderObj.folderName = folderName;
+    folderObj.dateTime = new Date();
+    // folderObj.files = [];
+    dataModel.createFolder(folderObj);
+    props.setModalVisible(false);
+  };
+
   return (
     <Modal
       transparent={true}
@@ -25,14 +38,19 @@ function AddFolderComponent(props) {
       <View style={styles.container}>
         <View style={styles.formContainer}>
           <Text style={styles.heading}>ENTER FOLDER NAME</Text>
-          <TextInput placeholder="Enter folder name..." style={styles.input} />
+          <TextInput
+            placeholder="Enter folder name..."
+            style={styles.input}
+            value={folderName}
+            onChangeText={(text) => setFolderName(text)}
+          />
           <View style={styles.btnContainer}>
             <TouchableOpacity
               style={[styles.btn, {backgroundColor: '#fff'}]}
               onPress={() => clodeModal()}>
               <Text style={[styles.btnText, {color: '#000'}]}>CANCEL</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => createFolder()}>
               <Text style={styles.btnText}>CREATE</Text>
             </TouchableOpacity>
           </View>
