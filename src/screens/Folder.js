@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PrimaryColor} from '../constants/Theme';
 
 function Folder(props) {
+  console.log(props);
   const [modalVisible, setModalVisible] = useState(false);
 
   const addFile = () => {

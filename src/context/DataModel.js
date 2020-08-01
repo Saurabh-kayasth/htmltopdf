@@ -14,6 +14,7 @@ const FolderSchema = {
     // files: {type: 'list', objectType: 'Files'},
   },
 };
+
 const FileSchema = {
   name: 'PdfFile',
   primaryKey: 'id',
@@ -51,14 +52,20 @@ export default class DataModel extends Component {
     const id = this.getCurrenntFileId(realm);
     fileObj.id = id;
     realm.write(() => {
-      realm.create('PdfFile', fileObj, true); // Add New Folder
+      realm.create('PdfFile', fileObj, true); // Add New File
     });
   }
 
   getFolders() {
     let realm = new Realm({schema: [FolderSchema]});
     const folders = realm.objects('PdfFolder');
-    console.log(folders);
+    return folders;
+  }
+
+  getFilesWithFolderId(folderId) {
+    let realm = new Realm({schema: [FileSchema]});
+    const files = realm.objects.PdfFile;
+    console.log(files);
   }
 
   getCurrenntFolderId(realmDB) {

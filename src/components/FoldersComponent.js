@@ -12,13 +12,20 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
+import moment from 'moment';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FolderData(props) {
-  const goToFolder = () => {
-    props.navigation.navigate('folder');
+  const goToFolder = (id, folderName, dateTime) => {
+    const item = {};
+    item.id = id;
+    item.folderName = folderName;
+    item.dateTime = dateTime;
+    props.navigation.navigate('folder', {
+      item: item,
+    });
   };
 
   const renderRightAction = (progress, dragX) => {
@@ -39,6 +46,9 @@ function FolderData(props) {
     );
   };
 
+  const {id, folderName, dateTime} = props.item;
+  // console.log(moment(dateTime).format('dd/mm/yy'));
+
   return (
     <Swipeable
       rightThreshold={20}
@@ -46,16 +56,23 @@ function FolderData(props) {
         renderRightAction(progress, dragX)
       }
       fricton={2}>
-      <TouchableWithoutFeedback onPress={() => goToFolder()}>
+      <TouchableWithoutFeedback
+        onPress={() => goToFolder(id, folderName, dateTime)}>
         <View style={styles.folderContainer}>
-          <Icon name="folder" color={PrimaryColor} size={50} />
-          <View style={styles.data}>
-            <Text style={styles.folderName}>Folder Name</Text>
-            <Text style={styles.description}>Last Added File...</Text>
+          <View style={styles.folderData}>
+            <Icon name="folder" color={PrimaryColor} size={50} />
+            <View style={styles.data}>
+              <Text style={styles.folderName}>{folderName}</Text>
+              <Text style={styles.description}>Number of files....</Text>
+            </View>
           </View>
           <View style={styles.dateTime}>
-            <Text style={styles.dateTimeText}>29 Feb</Text>
-            <Text style={styles.dateTimeText}>12:45 PM</Text>
+            <Text style={styles.dateTimeText}>
+              {moment(new Date(dateTime)).format('DD/MM/YY')}
+            </Text>
+            <Text style={styles.dateTimeText}>
+              {moment(new Date(dateTime)).calendar()}
+            </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -64,13 +81,12 @@ function FolderData(props) {
 }
 
 function FoldersComponent(props) {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <View style={styles.container}>
       <FlatList
-        data={arr}
+        data={props.folders}
         renderItem={({item, index}) => {
-          return <FolderData navigation={props.navigation} />;
+          return <FolderData navigation={props.navigation} item={item} />;
         }}
       />
     </View>
@@ -97,6 +113,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 5,
     borderRadius: 10,
+    justifyContent: 'space-between',
+  },
+  folderData: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   folderName: {
     fontSize: 16,
@@ -106,7 +128,7 @@ const styles = StyleSheet.create({
   },
   data: {
     marginLeft: 10,
-    width: width - 150,
+    // width: '55%',
   },
   description: {
     fontSize: 15,
@@ -125,6 +147,7 @@ const styles = StyleSheet.create({
   dateTime: {
     justifyContent: 'center',
     alignItems: 'flex-end',
+    alignSelf: 'flex-end',
   },
   dateTimeText: {
     fontSize: 12,

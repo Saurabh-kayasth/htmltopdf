@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 
-const {width, height} = Dimensions.get('window');
+const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
