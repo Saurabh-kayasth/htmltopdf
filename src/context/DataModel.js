@@ -38,7 +38,7 @@ export default class DataModel extends Component {
   }
 
   createFolder(folderObj) {
-    let realm = new Realm({schema: [FolderSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const id = this.getCurrenntFolderId(realm);
     folderObj.id = id;
     realm.write(() => {
@@ -48,7 +48,7 @@ export default class DataModel extends Component {
 
   addFile(fileObj) {
     console.log(fileObj);
-    let realm = new Realm({schema: [FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const id = this.getCurrenntFileId(realm);
     fileObj.id = id;
     realm.write(() => {
@@ -57,15 +57,15 @@ export default class DataModel extends Component {
   }
 
   getFolders() {
-    let realm = new Realm({schema: [FolderSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const folders = realm.objects('PdfFolder');
     return folders;
   }
 
   getFilesWithFolderId(folderId) {
-    let realm = new Realm({schema: [FileSchema]});
-    const files = realm.objects.PdfFile;
-    console.log(files);
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    const files = realm.objects('PdfFile').filtered('folderId = $0', folderId);
+    return files;
   }
 
   getCurrenntFolderId(realmDB) {

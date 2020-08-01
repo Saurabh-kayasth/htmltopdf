@@ -15,6 +15,7 @@ import DataModel from '../context/DataModel';
 const {width} = Dimensions.get('window');
 
 function AddFileComponent(props) {
+  console.log(props);
   const [fileName, setFileName] = useState(String);
   const [fileUrl, setFileUrl] = useState(String);
 
@@ -27,7 +28,7 @@ function AddFileComponent(props) {
     const fileObj = {};
     fileObj.fileName = fileName;
     fileObj.dateTime = new Date();
-    fileObj.folderId = 1;
+    fileObj.folderId = props.item.id;
     fileObj.isFavourite = 0;
     fileObj.isScheduled = 0;
     fileObj.scheduledAt = new Date();

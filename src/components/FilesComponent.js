@@ -68,7 +68,7 @@ function FilesComponent(props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={arr}
+        data={props.files}
         renderItem={({item, index}) => {
           return <FilesData navigation={props.navigation} />;
         }}
