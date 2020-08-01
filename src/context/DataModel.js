@@ -22,8 +22,11 @@ const FileSchema = {
     folderId: 'int',
     fileName: 'string',
     dateTime: 'date',
-    sheduledAt: 'date',
+    scheduledAt: 'date',
     location: 'string',
+    fileUrl: 'string',
+    isFavourite: 'int',
+    isScheduled: 'int',
   },
 };
 
@@ -43,12 +46,19 @@ export default class DataModel extends Component {
   }
 
   addFile(fileObj) {
+    console.log(fileObj);
     let realm = new Realm({schema: [FileSchema]});
-    const id = this.getCurrenntFolderId(realm);
+    const id = this.getCurrenntFileId(realm);
     fileObj.id = id;
     realm.write(() => {
       realm.create('PdfFile', fileObj, true); // Add New Folder
     });
+  }
+
+  getFolders() {
+    let realm = new Realm({schema: [FolderSchema]});
+    const folders = realm.objects('PdfFolder');
+    console.log(folders);
   }
 
   getCurrenntFolderId(realmDB) {

@@ -1,5 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,13 +10,33 @@ import {
 } from 'react-native';
 import {PrimaryColor} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
+import DataModel from '../context/DataModel';
 
 const {width} = Dimensions.get('window');
 
 function AddFileComponent(props) {
+  const [fileName, setFileName] = useState(String);
+  const [fileUrl, setFileUrl] = useState(String);
+
   const closeModal = () => {
     props.setModalVisible(false);
   };
+
+  const addFile = () => {
+    const dataModel = new DataModel();
+    const fileObj = {};
+    fileObj.fileName = fileName;
+    fileObj.dateTime = new Date();
+    fileObj.folderId = 1;
+    fileObj.isFavourite = 0;
+    fileObj.isScheduled = 0;
+    fileObj.scheduledAt = new Date();
+    fileObj.fileUrl = fileUrl;
+    fileObj.location = 'file location';
+    dataModel.addFile(fileObj);
+    props.setModalVisible(false);
+  };
+
   return (
     <Modal
       transparent={true}
@@ -25,15 +45,25 @@ function AddFileComponent(props) {
       <View style={styles.container}>
         <View style={styles.formContainer}>
           <Text style={styles.heading}>ADD FILE</Text>
-          <TextInput placeholder="Enter file name..." style={styles.input} />
-          <TextInput placeholder="Enter URL..." style={styles.input} />
+          <TextInput
+            placeholder="Enter file name..."
+            style={styles.input}
+            value={fileName}
+            onChangeText={(text) => setFileName(text)}
+          />
+          <TextInput
+            placeholder="Enter URL..."
+            style={styles.input}
+            value={fileUrl}
+            onChangeText={(text) => setFileUrl(text)}
+          />
           <View style={styles.btnContainer}>
             <TouchableOpacity
               style={[styles.btn, {backgroundColor: '#fff'}]}
               onPress={() => closeModal()}>
               <Text style={[styles.btnText, {color: '#000'}]}>CANCEL</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn}>
+            <TouchableOpacity style={styles.btn} onPress={() => addFile()}>
               <Text style={styles.btnText}>ADD</Text>
             </TouchableOpacity>
           </View>
