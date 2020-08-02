@@ -13,13 +13,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 import moment from 'moment';
+import DataModel from '../context/DataModel';
 
 const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
   const {
-    fileId,
+    id,
     fileName,
     isScheduled,
     scheduledAt,
@@ -32,6 +33,15 @@ function FilesData(props) {
     props.navigation.navigate('pdf');
   };
 
+  const addToFav = () => {
+    setFavourite(!favourite);
+    const dataModel = new DataModel();
+    console.log(favourite);
+    const status = favourite ? 0 : 1;
+    console.log(status);
+    dataModel.addToFavWithFileId(id, status);
+  };
+
   const renderLeftAction = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [10, 80],
@@ -39,9 +49,7 @@ function FilesData(props) {
       extrapolate: 'clamp',
     });
     return (
-      <TouchableOpacity
-        style={styles.btnLeft}
-        onPress={() => setFavourite(!favourite)}>
+      <TouchableOpacity style={styles.btnLeft} onPress={() => addToFav()}>
         <AnimatedIcon
           name={favourite ? 'star' : 'star-outline'}
           size={35}

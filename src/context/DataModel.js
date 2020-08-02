@@ -31,6 +31,14 @@ const FileSchema = {
   },
 };
 
+// const FavSchema = {
+//   name: 'FavFile',
+//   primaryKey: 'id',
+//   properties: {
+//     id: 'int',
+//   },
+// };
+
 export default class DataModel extends Component {
   constructor(props) {
     super(props);
@@ -66,6 +74,14 @@ export default class DataModel extends Component {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const files = realm.objects('PdfFile').filtered('folderId = $0', folderId);
     return files;
+  }
+
+  addToFavWithFileId(fileId, status) {
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    const file = realm.objects('PdfFile').filtered('id = $0', fileId);
+    realm.write(() => {
+      file[0].isFavourite = status;
+    });
   }
 
   getCurrenntFolderId(realmDB) {
