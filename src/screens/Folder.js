@@ -26,7 +26,7 @@ function Folder(props) {
 
   return (
     <View style={styles.container}>
-      <HeaderCompponent header={'Folder_name'} />
+      <HeaderCompponent header={props.route.params.item.folderName} />
       <FilesComponent navigation={props.navigation} files={files} />
       <TouchableOpacity style={styles.btn} onPress={() => addFile()}>
         <Icon name="file-plus" size={25} color="#fff" />

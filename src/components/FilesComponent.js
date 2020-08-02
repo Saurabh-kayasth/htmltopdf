@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -12,18 +12,49 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
+import moment from 'moment';
 
 const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
+  const {
+    fileId,
+    fileName,
+    isScheduled,
+    scheduledAt,
+    dateTime,
+    isFavourite,
+  } = props.item;
+
+  const [favourite, setFavourite] = useState(isFavourite);
   const goToFolder = () => {
     props.navigation.navigate('pdf');
   };
 
+  const renderLeftAction = (progress, dragX) => {
+    const scale = dragX.interpolate({
+      inputRange: [10, 80],
+      outputRange: [0, 1],
+      extrapolate: 'clamp',
+    });
+    return (
+      <TouchableOpacity
+        style={styles.btnLeft}
+        onPress={() => setFavourite(!favourite)}>
+        <AnimatedIcon
+          name={favourite ? 'star' : 'star-outline'}
+          size={35}
+          color={PrimaryColor}
+          style={{transform: [{scale}]}}
+        />
+      </TouchableOpacity>
+    );
+  };
+
   const renderRightAction = (progress, dragX) => {
     const scale = dragX.interpolate({
-      inputRange: [-110, 10],
+      inputRange: [-80, 10],
       outputRange: [1, 0],
       extrapolate: 'clamp',
     });
@@ -31,7 +62,7 @@ function FilesData(props) {
       <TouchableOpacity style={styles.btn}>
         <AnimatedIcon
           name="delete"
-          size={45}
+          size={35}
           color={PrimaryColor}
           style={{transform: [{scale}]}}
         />
@@ -45,17 +76,29 @@ function FilesData(props) {
       renderRightActions={(progress, dragX) =>
         renderRightAction(progress, dragX)
       }
+      renderLeftActions={(progress, dragX) => renderLeftAction(progress, dragX)}
       fricton={2}>
       <TouchableWithoutFeedback onPress={() => goToFolder()}>
         <View style={styles.folderContainer}>
-          <Icon name="file" color={PrimaryColor} size={50} />
-          <View style={styles.data}>
-            <Text style={styles.folderName}>File Name</Text>
-            <Text style={styles.description}>Sheduled at 02:24</Text>
+          <View style={styles.filesData}>
+            <Icon name="file" color={PrimaryColor} size={50} />
+            <View style={styles.data}>
+              <Text style={styles.folderName}>{fileName}</Text>
+              <Text style={styles.description}>
+                {isScheduled
+                  ? moment(new Date(scheduledAt)).calendar()
+                  : 'Not Scheduled'}
+              </Text>
+            </View>
           </View>
+
           <View style={styles.dateTime}>
-            <Text style={styles.dateTimeText}>29 Feb</Text>
-            <Text style={styles.dateTimeText}>12:45 PM</Text>
+            <Text style={styles.dateTimeText}>
+              {moment(new Date(dateTime)).format('DD/MM/YY')}
+            </Text>
+            <Text style={styles.dateTimeText}>
+              {moment(new Date(dateTime)).calendar()}
+            </Text>
           </View>
         </View>
       </TouchableWithoutFeedback>
@@ -64,13 +107,13 @@ function FilesData(props) {
 }
 
 function FilesComponent(props) {
-  const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  // const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <View style={styles.container}>
       <FlatList
         data={props.files}
         renderItem={({item, index}) => {
-          return <FilesData navigation={props.navigation} />;
+          return <FilesData navigation={props.navigation} item={item} />;
         }}
       />
     </View>
@@ -97,6 +140,12 @@ const styles = StyleSheet.create({
     padding: 10,
     paddingLeft: 5,
     borderRadius: 10,
+    justifyContent: 'space-between',
+  },
+  filesData: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   folderName: {
     fontSize: 16,
@@ -106,7 +155,7 @@ const styles = StyleSheet.create({
   },
   data: {
     marginLeft: 10,
-    width: width - 150,
+    // width: width - 150,
   },
   description: {
     fontSize: 15,
@@ -114,13 +163,23 @@ const styles = StyleSheet.create({
   },
   btn: {
     marginTop: 10,
-    width: 110,
+    width: 80,
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
+  },
+  btnLeft: {
+    marginTop: 10,
+    width: 80,
+    marginLeft: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   dateTime: {
     justifyContent: 'center',
