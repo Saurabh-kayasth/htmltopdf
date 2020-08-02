@@ -5,7 +5,7 @@ import FilesComponent from '../components/FilesComponent';
 import AddFileComponent from '../components/AddFileComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {PrimaryColor} from '../constants/Theme';
-import DataModel from '../context/DataModel';
+import DataModel from '../Data/DataModel';
 
 function Folder(props) {
   console.log(props.route);

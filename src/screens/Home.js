@@ -5,7 +5,7 @@ import FoldersComponent from '../components/FoldersComponent';
 import {PrimaryColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddFolderComponent from '../components/AddFolderComponent';
-import DataModel from '../context/DataModel';
+import DataModel from '../Data/DataModel';
 
 function Home(props) {
   const [modalVisible, setModalVisible] = useState(false);

@@ -84,6 +84,12 @@ export default class DataModel extends Component {
     });
   }
 
+  getFavFiles() {
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    const files = realm.objects('PdfFile').filtered('isFavourite = $0', 1);
+    return files;
+  }
+
   getCurrenntFolderId(realmDB) {
     return realmDB.objects('PdfFolder').length + 1;
   }

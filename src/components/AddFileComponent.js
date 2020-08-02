@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import {PrimaryColor} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
-import DataModel from '../context/DataModel';
+import DataModel from '../Data/DataModel';
 
 const {width} = Dimensions.get('window');
 

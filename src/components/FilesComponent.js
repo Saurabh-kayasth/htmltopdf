@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,12 +13,14 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 import moment from 'moment';
-import DataModel from '../context/DataModel';
+import DataModel from '../Data/DataModel';
+import {FilesContext, FilesContextConsumer} from '../context';
 
 const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
+  let {state, dispatch} = useContext(FilesContext);
   const {
     id,
     fileName,
@@ -40,6 +42,8 @@ function FilesData(props) {
     const status = favourite ? 0 : 1;
     console.log(status);
     dataModel.addToFavWithFileId(id, status);
+    // props.refresh();
+    dispatch({type: 'fav'});
   };
 
   const renderLeftAction = (progress, dragX) => {
@@ -121,7 +125,13 @@ function FilesComponent(props) {
       <FlatList
         data={props.files}
         renderItem={({item, index}) => {
-          return <FilesData navigation={props.navigation} item={item} />;
+          return (
+            <FilesData
+              navigation={props.navigation}
+              item={item}
+              refresh={props.refresh}
+            />
+          );
         }}
       />
     </View>
