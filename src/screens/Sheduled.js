@@ -1,8 +1,13 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
+import HeaderCompponent from '../components/HeaderComponent';
 
 function Scheduled() {
-  return <View style={styles.container}></View>;
+  return (
+    <View style={styles.container}>
+      <HeaderCompponent header={'Scheduled'} />
+    </View>
+  );
 }
 
 export default Scheduled;
