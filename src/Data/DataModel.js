@@ -44,35 +44,38 @@ export default class DataModel extends Component {
     super(props);
     // Realm.deleteFile();
   }
-
+  // Add New Folder
   createFolder(folderObj) {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const id = this.getCurrenntFolderId(realm);
     folderObj.id = id;
     realm.write(() => {
-      realm.create('PdfFolder', folderObj, true); // Add New Folder
+      realm.create('PdfFolder', folderObj, true);
     });
   }
 
+  // Add New File
   addFile(fileObj) {
     console.log(fileObj);
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const id = this.getCurrenntFileId(realm);
     fileObj.id = id;
     realm.write(() => {
-      realm.create('PdfFile', fileObj, true); // Add New File
+      realm.create('PdfFile', fileObj, true);
     });
   }
 
+  // get only folders
   getFolders() {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
-    const folders = realm.objects('PdfFolder'); // get only folders
+    const folders = realm.objects('PdfFolder');
     return folders;
   }
 
+  // get files only for given folder id
   getFilesWithFolderId(folderId) {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
-    const files = realm.objects('PdfFile').filtered('folderId = $0', folderId); // get files only for given folder id
+    const files = realm.objects('PdfFile').filtered('folderId = $0', folderId);
     return files;
   }
 

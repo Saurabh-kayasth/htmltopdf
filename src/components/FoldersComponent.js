@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 import {
   View,
   StyleSheet,
@@ -13,11 +13,15 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 import moment from 'moment';
+import DataModel from '../Data/DataModel';
+import {FilesContext, FilesContextConsumer} from '../context';
 
 const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FolderData(props) {
+  let {state, dispatch} = useContext(FilesContext);
+
   const goToFolder = (id, folderName, dateTime) => {
     const item = {};
     item.id = id;
@@ -28,6 +32,14 @@ function FolderData(props) {
     });
   };
 
+  const {id, folderName, dateTime} = props.item;
+
+  const deleteFolder = () => {
+    const dataModel = new DataModel();
+    dataModel.deleteFolderWithId(id);
+    dispatch({type: 'fav'});
+  };
+
   const renderRightAction = (progress, dragX) => {
     const scale = dragX.interpolate({
       inputRange: [-110, 10],
@@ -35,7 +47,7 @@ function FolderData(props) {
       extrapolate: 'clamp',
     });
     return (
-      <TouchableOpacity style={styles.btn}>
+      <TouchableOpacity style={styles.btn} onPress={() => deleteFolder()}>
         <AnimatedIcon
           name="delete"
           size={45}
@@ -46,7 +58,6 @@ function FolderData(props) {
     );
   };
 
-  const {id, folderName, dateTime} = props.item;
   // console.log(moment(dateTime).format('dd/mm/yy'));
 
   return (

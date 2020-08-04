@@ -23,6 +23,13 @@ let reducer = (state, action) => {
       const files = getFavFiles();
       return {...state, files: files};
     }
+    case 'folders': {
+      // console.log('updating -------------------');
+      const dataModel = new DataModel();
+
+      const folders = dataModel.getFolders();
+      return {folders: folders};
+    }
   }
 };
 
