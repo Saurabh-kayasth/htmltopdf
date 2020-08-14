@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import Home from '../screens/Home';
 import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
@@ -10,20 +11,35 @@ import Folder from '../screens/Folder';
 import {PrimaryColor} from '../constants/Theme';
 import Pdf from '../screens/Pdf';
 
-const Tab = createBottomTabNavigator();
+const Tab = createMaterialTopTabNavigator();
 
 function Tabs() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
       tabBarOptions={{
-        inactiveTintColor: 'gray',
-        activeTintColor: PrimaryColor,
-        tabStyle: {
-          backgroundColor: '#fff',
-          height: 55,
-          paddingBottom: 12,
-          paddingTop: 10,
+        activeTintColor: '#fff',
+        inactiveTintColor: '#e5e5e5',
+        showLabel: false,
+        showIcon: true,
+        style: {
+          backgroundColor: '#2b2b39',
+          height: 60,
+          // paddingTop: 10,
+          elevation: 0,
+        },
+        indicatorStyle: {
+          height: 0,
+        },
+        iconStyle: {
+          padding: 10,
+          height: 40,
+          width: 80,
+          justifyContent: 'center',
+          alignItems: 'center',
+          alignContent: 'center',
+          borderRadius: 20,
+          overflow: 'hidden',
         },
       }}>
       <Tab.Screen

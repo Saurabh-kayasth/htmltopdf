@@ -42,8 +42,8 @@ function FolderData(props) {
 
   const renderRightAction = (progress, dragX) => {
     const scale = dragX.interpolate({
-      inputRange: [-110, 10],
-      outputRange: [1, 0],
+      inputRange: [10, 110],
+      outputRange: [0, 1],
       extrapolate: 'clamp',
     });
     return (
@@ -62,8 +62,8 @@ function FolderData(props) {
 
   return (
     <Swipeable
-      rightThreshold={20}
-      renderRightActions={(progress, dragX) =>
+      leftThreshold={20}
+      renderLeftActions={(progress, dragX) =>
         renderRightAction(progress, dragX)
       }
       fricton={2}>

@@ -5,7 +5,7 @@ import HeaderCompponent from '../components/HeaderComponent';
 function Scheduled() {
   return (
     <View style={styles.container}>
-      <HeaderCompponent header={'Scheduled'} />
+      {/* <HeaderCompponent header={'Scheduled'} /> */}
     </View>
   );
 }

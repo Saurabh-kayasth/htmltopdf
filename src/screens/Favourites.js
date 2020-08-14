@@ -18,7 +18,7 @@ function Favourites(props) {
 
   return (
     <View style={styles.container}>
-      <HeaderCompponent header={'Favourites'} />
+      {/* <HeaderCompponent header={'Favourites'} /> */}
       <FilesContextConsumer>
         {(value) => {
           console.log('Home-------', value);

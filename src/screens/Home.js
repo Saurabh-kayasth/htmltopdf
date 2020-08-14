@@ -28,7 +28,7 @@ function Home(props) {
 
   return (
     <View style={styles.container}>
-      <HeaderCompponent header={'Home'} />
+      {/* <HeaderCompponent header={'Home'} /> */}
 
       <FilesContextConsumer>
         {(folders) => {
