@@ -2,16 +2,11 @@ import React, {createContext, useState, useEffect, useReducer} from 'react';
 import DataModel from '../Data/DataModel';
 export const Context = createContext();
 
-function customSort(a, b) {
-  // console.log('sorting===================');
-  return new Date(a.dueDate).getDate() - new Date(b.dueDate).getDate();
-}
 let initialState = {};
 
 const getFavFiles = () => {
   const dataModel = new DataModel();
   const taskData = dataModel.getFavFiles();
-  //   let tasks = [].slice.call(taskData).sort(customSort);
   initialState = taskData;
   return taskData;
 };
@@ -19,16 +14,18 @@ const getFavFiles = () => {
 let reducer = (state, action) => {
   switch (action.type) {
     case 'fav': {
-      // console.log('updating -------------------');
       const files = getFavFiles();
       return {...state, files: files};
     }
     case 'folders': {
-      // console.log('updating -------------------');
       const dataModel = new DataModel();
-
       const folders = dataModel.getFolders();
       return {folders: folders};
+    }
+    case 'sched': {
+      const dataModel = new DataModel();
+      const files = dataModel.getScheduledFiles();
+      return {files: files};
     }
   }
 };
