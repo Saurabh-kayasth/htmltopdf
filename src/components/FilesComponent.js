@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react';
+import React, {useState, useContext, useRef} from 'react';
 import {
   View,
   StyleSheet,
@@ -11,6 +11,8 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import OptionsMenu from 'react-native-options-menu';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
@@ -20,6 +22,8 @@ const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [doneSelection, setDoneSelection] = useState(false);
   let {state, dispatch} = useContext(FilesContext);
   const {
     id,
@@ -82,39 +86,92 @@ function FilesData(props) {
     );
   };
 
+  const getDisplayDateBySelectedMode = () => {
+    const {selectedMode} = ref.current;
+    return new Date();
+  };
+
+  const ref = useRef({
+    pickerMode: 'time', // used to determine the view the date picker opens in
+    selectedMode: null, // should be either assignDate | timeFrom | timeTo
+  });
+
+  const handleDateTimePickerChange = (event, selectedDate = new Date()) => {
+    setShowDatePicker(false);
+    if (!doneSelection) {
+      ref.current.selectedMode = 'time';
+      setShowDatePicker(true);
+      setDoneSelection(true);
+    } else {
+      setShowDatePicker(false);
+      setDoneSelection(true);
+    }
+  };
+
+  const setSelectedAndPickerModeAndOpenPicker = () => {
+    ref.current.selectedMode = 'date';
+    setShowDatePicker(true);
+  };
+
   return (
-    <Swipeable
-      rightThreshold={20}
-      renderRightActions={(progress, dragX) =>
-        renderRightAction(progress, dragX)
-      }
-      renderLeftActions={(progress, dragX) => renderLeftAction(progress, dragX)}
-      fricton={2}>
-      <TouchableWithoutFeedback onPress={() => goToFolder()}>
-        <View style={styles.folderContainer}>
-          <View style={styles.filesData}>
-            <Icon name="file" color={PrimaryColor} size={50} />
-            <View style={styles.data}>
-              <Text style={styles.folderName}>{fileName}</Text>
-              <Text style={styles.description}>
-                {isScheduled
-                  ? moment(new Date(scheduledAt)).calendar()
-                  : 'Not Scheduled'}
+    <>
+      {showDatePicker && (
+        <DateTimePicker
+          testID="dateTimePicker"
+          timeZoneOffsetInMinutes={0}
+          value={getDisplayDateBySelectedMode()}
+          mode={ref.current.selectedMode}
+          is24Hour
+          display="default"
+          onChange={(event, selectedDate) =>
+            handleDateTimePickerChange(event, selectedDate)
+          }
+        />
+      )}
+      <Swipeable
+        rightThreshold={20}
+        renderRightActions={(progress, dragX) =>
+          renderRightAction(progress, dragX)
+        }
+        renderLeftActions={(progress, dragX) =>
+          renderLeftAction(progress, dragX)
+        }
+        fricton={2}>
+        <TouchableWithoutFeedback onPress={() => goToFolder()}>
+          <View style={styles.folderContainer}>
+            <View style={styles.filesData}>
+              <Icon name="file" color={PrimaryColor} size={50} />
+              <View style={styles.data}>
+                <Text style={styles.folderName}>{fileName}</Text>
+                <Text style={styles.description}>
+                  {isScheduled
+                    ? moment(new Date(scheduledAt)).calendar()
+                    : 'Not Scheduled'}
+                </Text>
+              </View>
+            </View>
+
+            <View style={styles.dateTime}>
+              <Text style={styles.dateTimeText}>
+                {/* {moment(new Date(dateTime)).format('DD/MM/YY')} */}
+                <OptionsMenu
+                  customButton={<Icon name="menu" size={25} color="#000" />}
+                  options={['Delete', 'Add To Favourite', 'Schedule This File']}
+                  actions={[
+                    setSelectedAndPickerModeAndOpenPicker,
+                    setSelectedAndPickerModeAndOpenPicker,
+                    setSelectedAndPickerModeAndOpenPicker,
+                  ]}
+                />
+              </Text>
+              <Text style={styles.dateTimeText}>
+                {moment(new Date(dateTime)).calendar()}
               </Text>
             </View>
           </View>
-
-          <View style={styles.dateTime}>
-            <Text style={styles.dateTimeText}>
-              {moment(new Date(dateTime)).format('DD/MM/YY')}
-            </Text>
-            <Text style={styles.dateTimeText}>
-              {moment(new Date(dateTime)).calendar()}
-            </Text>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
-    </Swipeable>
+        </TouchableWithoutFeedback>
+      </Swipeable>
+    </>
   );
 }
 

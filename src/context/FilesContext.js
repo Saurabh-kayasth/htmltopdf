@@ -20,12 +20,14 @@ let reducer = (state, action) => {
     case 'folders': {
       const dataModel = new DataModel();
       const folders = dataModel.getFolders();
-      return {folders: folders};
+      console.log('folders........');
+      return {...state, folders: folders};
     }
     case 'sched': {
       const dataModel = new DataModel();
       const files = dataModel.getScheduledFiles();
-      return {files: files};
+      console.log('files........');
+      return {...state, files: files};
     }
   }
 };

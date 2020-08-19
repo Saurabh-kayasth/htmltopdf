@@ -21,7 +21,7 @@ function Scheduled(props) {
       {/* <HeaderCompponent header={'Favourites'} /> */}
       <FilesContextConsumer>
         {(value) => {
-          console.log('Home-------', value);
+          console.log('ssssssssssss-------', value);
           return (
             <FilesComponent
               navigation={props.navigation}
