@@ -25,6 +25,9 @@ function FilesData(props) {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [doneSelection, setDoneSelection] = useState(false);
   let {state, dispatch} = useContext(FilesContext);
+  const [date, setDate] = useState(new Date());
+  const [time, setTime] = useState(new Date());
+
   const {
     id,
     fileName,
@@ -98,14 +101,29 @@ function FilesData(props) {
 
   const handleDateTimePickerChange = (event, selectedDate = new Date()) => {
     setShowDatePicker(false);
+
     if (!doneSelection) {
       ref.current.selectedMode = 'time';
+      setDate(selectedDate);
+      console.log(date);
+      setDoneSelection(true);
       setShowDatePicker(true);
-      setDoneSelection(true);
     } else {
-      setShowDatePicker(false);
-      setDoneSelection(true);
+      setTime(selectedDate);
+      ref.current.selectedMode = 'date';
+      setDoneSelection(false);
+      console.log(time);
+      const dataModel = new DataModel();
+      dataModel.setFileSchedule(id, date, time);
+      dispatch({type: 'sched'});
     }
+
+    // if (ref.current.selectedMode === 'date') {
+    //   setDate(selectedDate);
+    // } else if (ref.current.selectedMode === 'time') {
+    //   setTime(selectedDate);
+
+    // }
   };
 
   const setSelectedAndPickerModeAndOpenPicker = () => {
@@ -163,6 +181,7 @@ function FilesData(props) {
                     setSelectedAndPickerModeAndOpenPicker,
                   ]}
                 />
+                {/* <Icon name="clock" color="#2b2b39" size={25} /> */}
               </Text>
               <Text style={styles.dateTimeText}>
                 {moment(new Date(dateTime)).calendar()}

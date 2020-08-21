@@ -23,7 +23,8 @@ const FileSchema = {
     folderId: 'int',
     fileName: 'string',
     dateTime: 'date',
-    scheduledAt: 'date',
+    scheduledAtDate: 'date',
+    scheduledAtTime: 'date',
     location: 'string',
     fileUrl: 'string',
     isFavourite: 'int',
@@ -103,13 +104,16 @@ export default class DataModel extends Component {
   }
 
   // schedule file for later reading
-  setFileSchedule(fileId, status) {
+  setFileSchedule(fileId, date, time) {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const file = realm.objects('PdfFile').filtered('id = $0', fileId);
     realm.write(() => {
-      file[0].isScheduled = status;
-      file[0].scheduledAt = new Date();
+      file[0].isScheduled = 1;
+      file[0].scheduledAtDate = date;
+      file[0].scheduledAtTime = time;
     });
+    const files = realm.objects('PdfFile').filtered('id = $0', fileId);
+    console.log(files);
   }
 
   // get all scheduled files

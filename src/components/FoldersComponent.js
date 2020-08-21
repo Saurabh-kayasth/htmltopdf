@@ -37,7 +37,7 @@ function FolderData(props) {
   const deleteFolder = () => {
     const dataModel = new DataModel();
     dataModel.deleteFolderWithId(id);
-    dispatch({type: 'fav'});
+    dispatch({type: 'folders'});
   };
 
   const renderRightAction = (progress, dragX) => {

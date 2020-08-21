@@ -31,7 +31,8 @@ function AddFileComponent(props) {
     fileObj.folderId = props.item.id;
     fileObj.isFavourite = 0;
     fileObj.isScheduled = 0;
-    fileObj.scheduledAt = new Date();
+    fileObj.scheduledAtDate = new Date();
+    fileObj.scheduledAtTime = new Date();
     fileObj.fileUrl = fileUrl;
     fileObj.location = 'file location';
     dataModel.addFile(fileObj);
