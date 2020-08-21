@@ -27,6 +27,7 @@ function AddFolderComponent(props) {
     folderObj.dateTime = new Date();
     // folderObj.files = [];
     dataModel.createFolder(folderObj);
+    props.dispatch({type: 'add', payload: folderObj});
     props.setModalVisible(false);
   };
 

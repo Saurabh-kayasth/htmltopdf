@@ -125,6 +125,7 @@ export default class DataModel extends Component {
 
   // delete folder and files inside it
   deleteFolderWithId(folderId) {
+    console.log('FOLDER ID ================== ', folderId);
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     realm.write(() => {
       const folder = realm.objects('PdfFolder').filtered('id == $0', folderId);

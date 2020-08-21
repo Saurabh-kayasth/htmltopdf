@@ -1,41 +1,42 @@
-import React, {useState, useEffect, useContext} from 'react';
+import React, {useState, useEffect, useReducer} from 'react';
 import {View, StyleSheet, TouchableOpacity} from 'react-native';
 import FoldersComponent from '../components/FoldersComponent';
 import {PrimaryColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddFolderComponent from '../components/AddFolderComponent';
-import {FilesContext, FilesContextConsumer} from '../context';
+import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
 
 function Home(props) {
   const [modalVisible, setModalVisible] = useState(false);
-  let {state, dispatch} = useContext(FilesContext);
+  const [state, dispatch] = useReducer(FolderReducer);
 
   useEffect(() => {
-    dispatch({type: 'folders'});
+    dispatch({type: 'get'});
   }, [dispatch]);
 
   const addFolder = () => {
-    console.log('add folder');
     setModalVisible(true);
   };
 
   return (
     <View style={styles.container}>
-      <FilesContextConsumer>
-        {(folders) => {
-          console.log('Home-------', folders);
-          return (
-            <FoldersComponent
-              navigation={props.navigation}
-              folders={folders.state.folders}
-            />
-          );
-        }}
-      </FilesContextConsumer>
+      {state && (
+        <FoldersComponent
+          navigation={props.navigation}
+          data={state}
+          dispatch={dispatch}
+        />
+      )}
+
       <TouchableOpacity style={styles.btn} onPress={() => addFolder()}>
         <Icon name="folder-plus" size={25} color="#fff" />
       </TouchableOpacity>
-      {modalVisible && <AddFolderComponent setModalVisible={setModalVisible} />}
+      {modalVisible && (
+        <AddFolderComponent
+          setModalVisible={setModalVisible}
+          dispatch={dispatch}
+        />
+      )}
     </View>
   );
 }

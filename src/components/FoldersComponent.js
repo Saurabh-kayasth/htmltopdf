@@ -14,13 +14,13 @@ import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
-import {FilesContext, FilesContextConsumer} from '../context';
+// import {FilesContext, FilesContextConsumer} from '../context/indexxx';
 
 const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FolderData(props) {
-  let {state, dispatch} = useContext(FilesContext);
+  // let {state, dispatch} = useContext(FilesContext);
 
   const goToFolder = (id, folderName, dateTime) => {
     const item = {};
@@ -37,7 +37,7 @@ function FolderData(props) {
   const deleteFolder = () => {
     const dataModel = new DataModel();
     dataModel.deleteFolderWithId(id);
-    dispatch({type: 'folders'});
+    props.dispatch({type: 'delete', payload: id});
   };
 
   const renderRightAction = (progress, dragX) => {
@@ -57,9 +57,6 @@ function FolderData(props) {
       </TouchableOpacity>
     );
   };
-
-  // console.log(moment(dateTime).format('dd/mm/yy'));
-
   return (
     <Swipeable
       leftThreshold={20}
@@ -95,9 +92,16 @@ function FoldersComponent(props) {
   return (
     <View style={styles.container}>
       <FlatList
-        data={props.folders}
+        data={props.data.folders}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={({item, index}) => {
-          return <FolderData navigation={props.navigation} item={item} />;
+          return (
+            <FolderData
+              navigation={props.navigation}
+              item={item}
+              dispatch={props.dispatch}
+            />
+          );
         }}
       />
     </View>
