@@ -36,6 +36,7 @@ function AddFileComponent(props) {
     fileObj.fileUrl = fileUrl;
     fileObj.location = 'file location';
     dataModel.addFile(fileObj);
+    props.dispatch({type: 'add', payload: fileObj});
     props.setModalVisible(false);
   };
 

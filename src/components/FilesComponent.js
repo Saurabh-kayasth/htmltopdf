@@ -45,17 +45,17 @@ function FilesData(props) {
   const addToFav = () => {
     setFavourite(!favourite);
     const dataModel = new DataModel();
-    console.log(favourite);
+    // console.log(favourite);
     const status = favourite ? 0 : 1;
-    console.log(status);
+    // console.log(status);
     dataModel.addToFavWithFileId(id, status);
     // props.refresh();
-    // dispatch({type: 'fav'});
   };
 
   const deleteFile = () => {
     const dataModel = new DataModel();
     dataModel.deleteFileWithId(id);
+    props.dispatch({type: 'delete', payload: id});
   };
 
   const renderLeftAction = (progress, dragX) => {
@@ -200,6 +200,8 @@ function FilesData(props) {
 }
 
 function FilesComponent(props) {
+  console.log('-----------------------------');
+  console.log(props);
   // const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
   return (
     <View style={styles.container}>
@@ -211,6 +213,7 @@ function FilesComponent(props) {
               navigation={props.navigation}
               item={item}
               refresh={props.refresh}
+              dispatch={props.dispatch}
             />
           );
         }}
