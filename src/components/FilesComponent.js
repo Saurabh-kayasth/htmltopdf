@@ -8,6 +8,7 @@ import {
   Animated,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  RefreshControl,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -47,6 +48,10 @@ function FilesData(props) {
     const dataModel = new DataModel();
     // console.log(favourite);
     const status = favourite ? 0 : 1;
+    if (favourite) {
+      console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
+      props.favdispatch({type: 'delete', payload: id});
+    }
     // console.log(status);
     dataModel.addToFavWithFileId(id, status);
     // props.refresh();
@@ -54,8 +59,16 @@ function FilesData(props) {
 
   const deleteFile = () => {
     const dataModel = new DataModel();
+
+    if (props.dispatch !== undefined) {
+      props.dispatch({type: 'delete', payload: id});
+    }
+
+    if (props.favdispatch !== undefined) {
+      props.favdispatch({type: 'delete', payload: id});
+    }
+
     dataModel.deleteFileWithId(id);
-    props.dispatch({type: 'delete', payload: id});
   };
 
   const renderLeftAction = (progress, dragX) => {
@@ -200,13 +213,27 @@ function FilesData(props) {
 }
 
 function FilesComponent(props) {
-  console.log('-----------------------------');
-  console.log(props);
-  // const arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {
+    if (props.favdispatch !== undefined) {
+      console.log('refreshing......');
+      setRefreshing(true);
+      props.favdispatch({type: 'get'});
+      setRefreshing(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={props.files}
+        keyExtractor={(item, index) => index.toString()}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={() => onRefresh()}
+          />
+        }
         renderItem={({item, index}) => {
           return (
             <FilesData
@@ -214,6 +241,7 @@ function FilesComponent(props) {
               item={item}
               refresh={props.refresh}
               dispatch={props.dispatch}
+              favdispatch={props.favdispatch}
             />
           );
         }}

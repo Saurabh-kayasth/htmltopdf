@@ -43,6 +43,7 @@ const FileSchema = {
 export default class DataModel extends Component {
   constructor(props) {
     super(props);
+    Realm.open();
     // Realm.deleteFile();
   }
   // Add New Folder
