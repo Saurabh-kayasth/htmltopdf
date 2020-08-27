@@ -70,6 +70,10 @@ function FilesData(props) {
       props.favdispatch({type: 'delete', payload: id});
     }
 
+    if (props.sheddispatch !== undefined) {
+      props.sheddispatch({type: 'delete', payload: id});
+    }
+
     dataModel.deleteFileWithId(id);
   };
 
@@ -151,6 +155,15 @@ function FilesData(props) {
     setShowDatePicker(true);
   };
 
+  const unshedule = () => {
+    const dataModel = new DataModel();
+    if (props.sheddispatch !== undefined) {
+      props.sheddispatch({type: 'delete', payload: id});
+    }
+
+    dataModel.setFileUnshedule(id);
+  };
+
   return (
     <>
       {showDatePicker && (
@@ -192,15 +205,24 @@ function FilesData(props) {
             <View style={styles.dateTime}>
               <Text style={styles.dateTimeText}>
                 {/* {moment(new Date(dateTime)).format('DD/MM/YY')} */}
-                <OptionsMenu
-                  customButton={<Icon name="menu" size={25} color="#000" />}
-                  options={['Delete', 'Add To Favourite', 'Schedule This File']}
-                  actions={[
-                    setSelectedAndPickerModeAndOpenPicker,
-                    setSelectedAndPickerModeAndOpenPicker,
-                    setSelectedAndPickerModeAndOpenPicker,
-                  ]}
-                />
+                {isScheduled ? (
+                  <OptionsMenu
+                    customButton={<Icon name="menu" size={25} color="#000" />}
+                    options={['Delete', 'Add To Favourite', 'Unshedule']}
+                    actions={[deleteFile, addToFav, unshedule]}
+                  />
+                ) : (
+                  <OptionsMenu
+                    customButton={<Icon name="menu" size={25} color="#000" />}
+                    options={['Delete', 'Add To Favourite', 'Schedule']}
+                    actions={[
+                      deleteFile,
+                      addToFav,
+                      setSelectedAndPickerModeAndOpenPicker,
+                    ]}
+                  />
+                )}
+
                 {/* <Icon name="clock" color="#2b2b39" size={25} /> */}
               </Text>
               <Text style={styles.dateTimeText}>

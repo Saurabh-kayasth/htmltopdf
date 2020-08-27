@@ -117,6 +117,14 @@ export default class DataModel extends Component {
     console.log(files);
   }
 
+  setFileUnshedule(fileId) {
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    const file = realm.objects('PdfFile').filtered('id = $0', fileId);
+    realm.write(() => {
+      file[0].isScheduled = 0;
+    });
+  }
+
   // get all scheduled files
   getScheduledFiles() {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
