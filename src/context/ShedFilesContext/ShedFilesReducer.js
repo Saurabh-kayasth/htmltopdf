@@ -3,9 +3,9 @@ import DataModel from '../../Data/DataModel';
 export const Context = createContext();
 
 class Files {
-  getFilesWithId(fileId) {
+  getFilesWithId() {
     const dataModel = new DataModel();
-    const files = dataModel.getFavFiles();
+    const files = dataModel.getScheduledFiles();
     return files;
   }
 
@@ -20,15 +20,15 @@ class Files {
 
 let initialState = {files: []};
 
-export const FavFilesReducer = (state = initialState, action) => {
+export const ShedFilesReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'get': {
       const files = new Files();
-      const filesData = files.getFilesWithId(action.payload);
+      const filesData = files.getFilesWithId();
       return {...state, files: [...filesData]};
     }
     case 'add': {
-      // action.payload.id = state.files.length + 1;
+      //   action.payload.id = state.files.length + 1;
       return {...state, files: [...state.files, action.payload]};
     }
     case 'delete': {

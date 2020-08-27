@@ -50,7 +50,9 @@ function FilesData(props) {
     const status = favourite ? 0 : 1;
     if (favourite) {
       console.log('-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=');
-      props.favdispatch({type: 'delete', payload: id});
+      if (props.favdispatch !== undefined) {
+        props.favdispatch({type: 'delete', payload: id});
+      }
     }
     // console.log(status);
     dataModel.addToFavWithFileId(id, status);
@@ -221,6 +223,12 @@ function FilesComponent(props) {
       props.favdispatch({type: 'get'});
       setRefreshing(false);
     }
+    if (props.sheddispatch !== undefined) {
+      console.log('refreshing......');
+      setRefreshing(true);
+      props.sheddispatch({type: 'get'});
+      setRefreshing(false);
+    }
   };
 
   return (
@@ -242,6 +250,7 @@ function FilesComponent(props) {
               refresh={props.refresh}
               dispatch={props.dispatch}
               favdispatch={props.favdispatch}
+              sheddispatch={props.sheddispatch}
             />
           );
         }}
