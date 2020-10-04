@@ -7,11 +7,24 @@ import {
   Text,
   Dimensions,
   TouchableOpacity,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import {PrimaryColor} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
 import DataModel from '../Data/DataModel';
-
+import RNFetchBlob from 'rn-fetch-blob';
+const {config, fs} = RNFetchBlob;
+let PictureDir = fs.dirs.PictureDir; // this is the pictures directory. You can check the available directories in the wiki.
+let options = {
+  fileCache: true,
+  addAndroidDownloads: {
+    useDownloadManager: true, // setting it to true will use the device's native download manager and will be shown in the notification bar.
+    notification: false,
+    path: PictureDir + '/me_' + 'saurabh', // this is the path where your downloaded file will live in
+    description: 'Downloading image.',
+  },
+};
 const {width} = Dimensions.get('window');
 
 function AddFileComponent(props) {
@@ -24,20 +37,69 @@ function AddFileComponent(props) {
   };
 
   const addFile = () => {
-    const dataModel = new DataModel();
-    const fileObj = {};
-    fileObj.fileName = fileName;
-    fileObj.dateTime = new Date();
-    fileObj.folderId = props.item.id;
-    fileObj.isFavourite = 0;
-    fileObj.isScheduled = 0;
-    fileObj.scheduledAtDate = new Date();
-    fileObj.scheduledAtTime = new Date();
-    fileObj.fileUrl = fileUrl;
-    fileObj.location = 'file location';
-    dataModel.addFile(fileObj);
-    props.dispatch({type: 'add', payload: fileObj});
+    downloadFile();
+    // const dataModel = new DataModel();
+    // const fileObj = {};
+    // fileObj.fileName = fileName;
+    // fileObj.dateTime = new Date();
+    // fileObj.folderId = props.item.id;
+    // fileObj.isFavourite = 0;
+    // fileObj.isScheduled = 0;
+    // fileObj.scheduledAtDate = new Date();
+    // fileObj.scheduledAtTime = new Date();
+    // fileObj.fileUrl = fileUrl;
+    // fileObj.location = 'file location';
+    // dataModel.addFile(fileObj);
+    // props.dispatch({type: 'add', payload: fileObj});
     props.setModalVisible(false);
+  };
+
+  const actualDownload = async () => {
+    const {dirs} = RNFetchBlob.fs;
+    console.log('making request');
+    RNFetchBlob.config({
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: 'demo.pdf',
+        path: `${dirs.DownloadDir}/demo.pdf`,
+      },
+    })
+      .fetch('GET', 'http://bd679340fdb2.ngrok.io/url/https://www.google.com', {})
+      .then((res) => {
+        // RNFetchBlob.fs.writeStream(
+        //   `${dirs.DownloadDir}/demo.pdf`,
+        //   res.data,
+        //   'base64',
+        // );
+        console.log('----------------------------');
+        console.log(res);
+        console.log('The file saved to ', res.path());
+      })
+      .catch((e) => {
+        console.log('-----------rrrrrr-----------------');
+        console.log(e);
+      });
+  };
+
+  const downloadFile = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        actualDownload();
+      } else {
+        Alert.alert(
+          'Permission Denied!',
+          'You need to give storage permission to download the file',
+        );
+      }
+    } catch (err) {
+      console.warn(err);
+    }
   };
 
   return (
@@ -66,7 +128,7 @@ function AddFileComponent(props) {
               onPress={() => closeModal()}>
               <Text style={[styles.btnText, {color: '#000'}]}>CANCEL</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={() => addFile()}>
+            <TouchableOpacity style={styles.btn} onPress={() => downloadFile()}>
               <Text style={styles.btnText}>ADD</Text>
             </TouchableOpacity>
           </View>
