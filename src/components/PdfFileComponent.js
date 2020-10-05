@@ -4,12 +4,14 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  Share,
+  // Share,
   TouchableOpacity,
 } from 'react-native';
 import Pdf from 'react-native-pdf';
 import {PrimaryColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import RNFetchBlob from 'rn-fetch-blob';
+import Share from 'react-native-share';
 
 const {width, height} = Dimensions.get('window');
 
@@ -17,38 +19,37 @@ function PdfFileComponent(props) {
   console.log(props.location);
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
+  console.log(`file://${props.location}`);
   const source = {
     uri: props.location,
     cache: true,
   };
 
-  const share = () => {
+  const share = async () => {
     var shareOptions = {
       title: 'Covid-19',
-      message:
-        'File Name : ' +
-        'userName' +
-        '\n' +
-        'props.item.message' +
-        '\nCredit : Covid Tracker',
-      // message: video.content + " " + "http://freehitnews.com?link=" + video.media_uri,
-      // url: this.props.item.img_url,
-      // subject: this.props.item.img_url, //  for email
+      message: '\nCredit : WebsiteToPDF',
+      uri: `file://${props.location}`,
+      // message:
+      //   video.content + ' ' + 'http://freehitnews.com?link=' + video.media_uri,
+      // url: base64Data,
+      //subject: this.props.item.img_url, //  for email
     };
-    Share.share(
-      Object.assign(shareOptions, {
-        social: 'whatsapp',
-      }),
-    );
+    Share.open({
+      title: 'This is my report ',
+      message: 'Message:',
+      url: `file://${props.location}`,
+      subject: 'Report',
+    });
   };
 
   return (
     <View style={styles.container}>
       <Pdf
         source={source}
-        onLoadComplete={(numberOfPages, filePath) => {
+        onLoadComplete={(numberOfPages, filePath, tableContents) => {
           console.log(`number of pages: ${numberOfPages}`);
-          console.log(filePath);
+          console.log(tableContents);
           setNumberOfPages(numberOfPages);
         }}
         onPageChanged={(page, numberOfPages) => {
