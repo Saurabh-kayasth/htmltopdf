@@ -10,7 +10,12 @@ import {
   PermissionsAndroid,
   Alert,
 } from 'react-native';
-import {PrimaryColor} from '../constants/Theme';
+import {
+  HeadingColor,
+  PlaceholderColor,
+  PrimaryColor,
+  SecondaryColor,
+} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
 import DataModel from '../Data/DataModel';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -67,7 +72,11 @@ function AddFileComponent(props) {
         path: `${dirs.DownloadDir}/demo.pdf`,
       },
     })
-      .fetch('GET', 'http://bd679340fdb2.ngrok.io/url/https://www.google.com', {})
+      .fetch(
+        'GET',
+        'http://bd679340fdb2.ngrok.io/url/https://www.google.com',
+        {},
+      )
       .then((res) => {
         // RNFetchBlob.fs.writeStream(
         //   `${dirs.DownloadDir}/demo.pdf`,
@@ -112,21 +121,25 @@ function AddFileComponent(props) {
           <Text style={styles.heading}>ADD FILE</Text>
           <TextInput
             placeholder="Enter file name..."
+            placeholderTextColor={PlaceholderColor}
             style={styles.input}
             value={fileName}
             onChangeText={(text) => setFileName(text)}
           />
           <TextInput
             placeholder="Enter URL..."
+            placeholderTextColor={PlaceholderColor}
             style={styles.input}
             value={fileUrl}
             onChangeText={(text) => setFileUrl(text)}
           />
           <View style={styles.btnContainer}>
             <TouchableOpacity
-              style={[styles.btn, {backgroundColor: '#fff'}]}
+              style={[styles.btn, {backgroundColor: SecondaryColor}]}
               onPress={() => closeModal()}>
-              <Text style={[styles.btnText, {color: '#000'}]}>CANCEL</Text>
+              <Text style={[styles.btnText, {color: HeadingColor}]}>
+                CANCEL
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={() => downloadFile()}>
               <Text style={styles.btnText}>ADD</Text>
@@ -166,10 +179,13 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     marginTop: 10,
     borderRadius: 5,
     paddingLeft: 10,
+    borderWidth: 0.2,
+    borderColor: HeadingColor,
+    color: HeadingColor,
   },
   btnContainer: {
     flexDirection: 'row',

@@ -8,7 +8,12 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import {PrimaryColor} from '../constants/Theme';
+import {
+  HeadingColor,
+  PlaceholderColor,
+  PrimaryColor,
+  SecondaryColor,
+} from '../constants/Theme';
 import {TextInput} from 'react-native-gesture-handler';
 import DataModel from '../Data/DataModel';
 
@@ -41,15 +46,18 @@ function AddFolderComponent(props) {
           <Text style={styles.heading}>ENTER FOLDER NAME</Text>
           <TextInput
             placeholder="Enter folder name..."
+            placeholderTextColor={PlaceholderColor}
             style={styles.input}
             value={folderName}
             onChangeText={(text) => setFolderName(text)}
           />
           <View style={styles.btnContainer}>
             <TouchableOpacity
-              style={[styles.btn, {backgroundColor: '#fff'}]}
+              style={[styles.btn, {backgroundColor: SecondaryColor}]}
               onPress={() => clodeModal()}>
-              <Text style={[styles.btnText, {color: '#000'}]}>CANCEL</Text>
+              <Text style={[styles.btnText, {color: HeadingColor}]}>
+                CANCEL
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.btn} onPress={() => createFolder()}>
               <Text style={styles.btnText}>CREATE</Text>
@@ -89,10 +97,13 @@ const styles = StyleSheet.create({
   input: {
     width: '100%',
     height: 40,
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     marginTop: 10,
     borderRadius: 5,
     paddingLeft: 10,
+    borderWidth: 0.2,
+    borderColor: HeadingColor,
+    color: HeadingColor,
   },
   btnContainer: {
     flexDirection: 'row',

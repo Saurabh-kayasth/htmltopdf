@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import MainStack from './src/router/router';
-import {SecondaryColor} from './src/constants/Theme';
+import {SecondaryColor, BackgroundColor} from './src/constants/Theme';
 // import {FilesContextProvider} from './src/context';
 // import {FoldersContextProvider} from './src/context/FoldersContext/indexxx';
 
@@ -22,5 +22,6 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: BackgroundColor,
   },
 });

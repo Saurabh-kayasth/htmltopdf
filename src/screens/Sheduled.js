@@ -5,6 +5,7 @@ import HeaderCompponent from '../components/HeaderComponent';
 import FilesComponent from '../components/FilesComponent';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
 import {ShedFilesReducer} from '../context/ShedFilesContext/ShedFilesReducer';
+import {BackgroundColor} from '../constants/Theme';
 
 function Sheduled(props) {
   const [files, setFiles] = useState(Array);
@@ -49,5 +50,6 @@ export default Sheduled;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: BackgroundColor,
   },
 });

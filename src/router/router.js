@@ -10,6 +10,7 @@ import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
 import {PrimaryColor} from '../constants/Theme';
 import Pdf from '../screens/Pdf';
+import Main from '../screens/Main';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -17,13 +18,15 @@ function Tabs() {
   return (
     <Tab.Navigator
       initialRouteName="Home"
+      swipeEnabled={false}
       tabBarOptions={{
         activeTintColor: '#fff',
         inactiveTintColor: '#e5e5e5',
         showLabel: false,
         showIcon: true,
+
         style: {
-          backgroundColor: '#2b2b39',
+          backgroundColor: '#22222d',
           height: 60,
           // paddingTop: 10,
           elevation: 0,
@@ -42,13 +45,26 @@ function Tabs() {
           overflow: 'hidden',
         },
       }}>
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Home"
-        component={Home}
+        component={Main}
         options={{
           tabBarIcon: ({focused, color}) => (
             <Icon
               name={focused ? 'home' : 'home-outline'}
+              size={25}
+              color={color}
+            />
+          ),
+        }}
+      /> */}
+      <Tab.Screen
+        name="Folder"
+        component={Home}
+        options={{
+          tabBarIcon: ({focused, color}) => (
+            <Icon
+              name={focused ? 'folder' : 'folder-outline'}
               size={25}
               color={color}
             />

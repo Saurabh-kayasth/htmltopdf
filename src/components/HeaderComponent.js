@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
-import {PrimaryColor} from '../constants/Theme';
+import {HeadingColor, PrimaryColor, SecondaryColor} from '../constants/Theme';
 
 function HeaderCompponent(props) {
   return (
@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
   container: {
     width: '100%',
     height: 60,
-    backgroundColor: PrimaryColor,
+    backgroundColor: SecondaryColor,
     justifyContent: 'center',
     padding: 10,
     paddingLeft: 15,
@@ -24,6 +24,6 @@ const styles = StyleSheet.create({
   },
   header: {
     fontSize: 24,
-    color: '#fff',
+    color: HeadingColor,
   },
 });

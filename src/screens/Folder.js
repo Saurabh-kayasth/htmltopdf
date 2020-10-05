@@ -4,7 +4,11 @@ import HeaderCompponent from '../components/HeaderComponent';
 import FilesComponent from '../components/FilesComponent';
 import AddFileComponent from '../components/AddFileComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {PrimaryColor} from '../constants/Theme';
+import {
+  BackgroundColor,
+  PrimaryColor,
+  SecondaryColor,
+} from '../constants/Theme';
 import DataModel from '../Data/DataModel';
 import {FilesReducer} from '../context/FIlesContext/FilesReducer';
 
@@ -58,12 +62,13 @@ export default Folder;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: BackgroundColor,
   },
   btn: {
     height: 55,
     width: 55,
     borderRadius: 55 / 2,
-    backgroundColor: PrimaryColor,
+    backgroundColor: SecondaryColor,
     elevation: 10,
     position: 'absolute',
     bottom: 30,

@@ -11,7 +11,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
+import {
+  PrimaryColor,
+  PlaceholderColor,
+  HeadingColor,
+  IconColor,
+  SecondaryColor,
+} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
@@ -51,7 +57,7 @@ function FolderData(props) {
         <AnimatedIcon
           name="delete"
           size={45}
-          color={PrimaryColor}
+          color={IconColor}
           style={{transform: [{scale}]}}
         />
       </TouchableOpacity>
@@ -68,7 +74,7 @@ function FolderData(props) {
         onPress={() => goToFolder(id, folderName, dateTime)}>
         <View style={styles.folderContainer}>
           <View style={styles.folderData}>
-            <Icon name="folder" color={PrimaryColor} size={50} />
+            <Icon name="folder" color={IconColor} size={40} />
             <View style={styles.data}>
               <Text style={styles.folderName}>{folderName}</Text>
               <Text style={styles.description}>Number of files....</Text>
@@ -121,7 +127,7 @@ const styles = StyleSheet.create({
   folderContainer: {
     width: width - 20,
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 10,
@@ -134,10 +140,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    paddingLeft: 7,
   },
   folderName: {
     fontSize: 16,
-    color: PrimaryColor,
+    color: HeadingColor,
     marginTop: 5,
     fontWeight: 'bold',
   },
@@ -147,7 +154,7 @@ const styles = StyleSheet.create({
   },
   description: {
     fontSize: 15,
-    color: 'gray',
+    color: IconColor,
   },
   btn: {
     marginTop: 10,
@@ -155,7 +162,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
   },
@@ -166,6 +173,6 @@ const styles = StyleSheet.create({
   },
   dateTimeText: {
     fontSize: 12,
-    color: PlaceholderColor,
+    color: IconColor,
   },
 });

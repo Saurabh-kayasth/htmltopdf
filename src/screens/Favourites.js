@@ -5,6 +5,7 @@ import HeaderCompponent from '../components/HeaderComponent';
 import FilesComponent from '../components/FilesComponent';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
 import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
+import {BackgroundColor} from '../constants/Theme';
 
 function Favourites(props) {
   const [files, setFiles] = useState(Array);
@@ -49,5 +50,6 @@ export default Favourites;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: BackgroundColor,
   },
 });
