@@ -13,11 +13,12 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 const {width, height} = Dimensions.get('window');
 
-function PdfFileComponent() {
+function PdfFileComponent(props) {
+  console.log(props.location);
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
   const source = {
-    uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf',
+    uri: props.location,
     cache: true,
   };
 

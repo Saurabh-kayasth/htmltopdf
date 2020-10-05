@@ -50,6 +50,7 @@ function Folder(props) {
         <AddFileComponent
           setModalVisible={setModalVisible}
           item={props.route.params.item}
+          folderName={props.route.params.item.folderName}
           dispatch={dispatch}
         />
       )}

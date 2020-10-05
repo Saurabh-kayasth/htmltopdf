@@ -14,7 +14,13 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import OptionsMenu from 'react-native-options-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {PrimaryColor, PlaceholderColor} from '../constants/Theme';
+import {
+  PrimaryColor,
+  PlaceholderColor,
+  SecondaryColor,
+  HeadingColor,
+  IconColor,
+} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
@@ -36,11 +42,12 @@ function FilesData(props) {
     scheduledAt,
     dateTime,
     isFavourite,
+    location,
   } = props.item;
 
   const [favourite, setFavourite] = useState(isFavourite);
   const goToFolder = () => {
-    props.navigation.navigate('pdf');
+    props.navigation.navigate('pdf', {location: location});
   };
 
   const addToFav = () => {
@@ -191,7 +198,7 @@ function FilesData(props) {
         <TouchableWithoutFeedback onPress={() => goToFolder()}>
           <View style={styles.folderContainer}>
             <View style={styles.filesData}>
-              <Icon name="file" color={PrimaryColor} size={50} />
+              <Icon name="file" color={IconColor} size={50} />
               <View style={styles.data}>
                 <Text style={styles.folderName}>{fileName}</Text>
                 <Text style={styles.description}>
@@ -294,7 +301,7 @@ const styles = StyleSheet.create({
   folderContainer: {
     width: width - 20,
     alignSelf: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 10,
@@ -310,7 +317,7 @@ const styles = StyleSheet.create({
   },
   folderName: {
     fontSize: 16,
-    color: PrimaryColor,
+    color: HeadingColor,
     marginTop: 5,
     fontWeight: 'bold',
   },
@@ -338,7 +345,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     borderTopLeftRadius: 10,
     borderBottomLeftRadius: 10,
   },

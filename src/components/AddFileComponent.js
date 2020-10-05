@@ -41,21 +41,20 @@ function AddFileComponent(props) {
     props.setModalVisible(false);
   };
 
-  const addFile = () => {
-    downloadFile();
-    // const dataModel = new DataModel();
-    // const fileObj = {};
-    // fileObj.fileName = fileName;
-    // fileObj.dateTime = new Date();
-    // fileObj.folderId = props.item.id;
-    // fileObj.isFavourite = 0;
-    // fileObj.isScheduled = 0;
-    // fileObj.scheduledAtDate = new Date();
-    // fileObj.scheduledAtTime = new Date();
-    // fileObj.fileUrl = fileUrl;
-    // fileObj.location = 'file location';
-    // dataModel.addFile(fileObj);
-    // props.dispatch({type: 'add', payload: fileObj});
+  const addFile = (path) => {
+    const dataModel = new DataModel();
+    const fileObj = {};
+    fileObj.fileName = fileName;
+    fileObj.dateTime = new Date();
+    fileObj.folderId = props.item.id;
+    fileObj.isFavourite = 0;
+    fileObj.isScheduled = 0;
+    fileObj.scheduledAtDate = new Date();
+    fileObj.scheduledAtTime = new Date();
+    fileObj.fileUrl = fileUrl;
+    fileObj.location = path;
+    dataModel.addFile(fileObj);
+    props.dispatch({type: 'add', payload: fileObj});
     props.setModalVisible(false);
   };
 
@@ -69,12 +68,12 @@ function AddFileComponent(props) {
         notification: true,
         mediaScannable: true,
         title: 'demo.pdf',
-        path: `${dirs.DownloadDir}/demo.pdf`,
+        path: `${dirs.DCIMDir}/htmlToPDF/${props.folderName}/demo.pdf`,
       },
     })
       .fetch(
         'GET',
-        'http://bd679340fdb2.ngrok.io/url/https://www.google.com',
+        'http://e23e7ea4a329.ngrok.io/url/https://www.google.com',
         {},
       )
       .then((res) => {
@@ -86,6 +85,7 @@ function AddFileComponent(props) {
         console.log('----------------------------');
         console.log(res);
         console.log('The file saved to ', res.path());
+        addFile(res.path());
       })
       .catch((e) => {
         console.log('-----------rrrrrr-----------------');
