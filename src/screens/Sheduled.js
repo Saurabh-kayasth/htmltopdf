@@ -6,6 +6,7 @@ import FilesComponent from '../components/FilesComponent';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
 import {ShedFilesReducer} from '../context/ShedFilesContext/ShedFilesReducer';
 import {BackgroundColor} from '../constants/Theme';
+import {useFocusEffect} from '@react-navigation/native';
 
 function Sheduled(props) {
   const [files, setFiles] = useState(Array);
@@ -18,6 +19,32 @@ function Sheduled(props) {
   // setFiles(fileList);
   // dispatch({type: 'fav'});
   // }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          // const user = await API.fetch({userId});
+
+          if (isActive) {
+            // setUser(user);
+            sheddispatch({type: 'get'});
+            console.log('focusing................');
+          }
+        } catch (e) {
+          // Handle error
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   useEffect(() => {
     sheddispatch({type: 'get'});

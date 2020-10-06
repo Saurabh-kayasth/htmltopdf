@@ -8,7 +8,11 @@ import Home from '../screens/Home';
 import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
-import {PrimaryColor} from '../constants/Theme';
+import {
+  BackgroundColor,
+  PrimaryColor,
+  SecondaryColor,
+} from '../constants/Theme';
 import Pdf from '../screens/Pdf';
 import Main from '../screens/Main';
 
@@ -26,7 +30,7 @@ function Tabs() {
         showIcon: true,
 
         style: {
-          backgroundColor: '#22222d',
+          backgroundColor: SecondaryColor,
           height: 60,
           // paddingTop: 10,
           elevation: 0,

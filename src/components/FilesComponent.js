@@ -95,7 +95,7 @@ function FilesData(props) {
         <AnimatedIcon
           name={favourite ? 'star' : 'star-outline'}
           size={35}
-          color={PrimaryColor}
+          color={IconColor}
           style={{transform: [{scale}]}}
         />
       </TouchableOpacity>
@@ -113,7 +113,7 @@ function FilesData(props) {
         <AnimatedIcon
           name="delete"
           size={35}
-          color={PrimaryColor}
+          color={IconColor}
           style={{transform: [{scale}]}}
         />
       </TouchableOpacity>
@@ -215,16 +215,16 @@ function FilesData(props) {
                 {isScheduled ? (
                   <OptionsMenu
                     customButton={<Icon name="menu" size={25} color="#000" />}
-                    options={['Delete', 'Add To Favourite', 'Unshedule']}
-                    actions={[deleteFile, addToFav, unshedule]}
+                    options={['Delete', 'Unshedule']}
+                    actions={[deleteFile, unshedule]}
                   />
                 ) : (
                   <OptionsMenu
                     customButton={<Icon name="menu" size={25} color="#000" />}
-                    options={['Delete', 'Add To Favourite', 'Schedule']}
+                    options={['Delete', 'Schedule']}
                     actions={[
                       deleteFile,
-                      addToFav,
+                      // addToFav,
                       setSelectedAndPickerModeAndOpenPicker,
                     ]}
                   />
@@ -335,7 +335,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: SecondaryColor,
     borderTopRightRadius: 10,
     borderBottomRightRadius: 10,
   },
@@ -355,6 +355,6 @@ const styles = StyleSheet.create({
   },
   dateTimeText: {
     fontSize: 12,
-    color: PlaceholderColor,
+    color: IconColor,
   },
 });

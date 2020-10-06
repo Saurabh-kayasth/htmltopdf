@@ -6,6 +6,7 @@ import FilesComponent from '../components/FilesComponent';
 // import {FilesContext, FilesContextConsumer} from '../context/indexxx';
 import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
 import {BackgroundColor} from '../constants/Theme';
+import {useFocusEffect} from '@react-navigation/native';
 
 function Favourites(props) {
   const [files, setFiles] = useState(Array);
@@ -18,6 +19,32 @@ function Favourites(props) {
   // setFiles(fileList);
   // dispatch({type: 'fav'});
   // }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          // const user = await API.fetch({userId});
+
+          if (isActive) {
+            // setUser(user);
+            favdispatch({type: 'get'});
+            console.log('focusing................');
+          }
+        } catch (e) {
+          // Handle error
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   useEffect(() => {
     favdispatch({type: 'get'});
