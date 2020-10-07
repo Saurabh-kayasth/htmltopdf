@@ -51,6 +51,8 @@ function AddFileComponent(props) {
     fileObj.isScheduled = 0;
     fileObj.scheduledAtDate = new Date();
     fileObj.scheduledAtTime = new Date();
+    fileObj.scheduledAtDateStr = '';
+    fileObj.fileDueHour = 0;
     fileObj.fileUrl = fileUrl;
     fileObj.location = path;
     dataModel.addFile(fileObj);
@@ -71,11 +73,7 @@ function AddFileComponent(props) {
         path: `${dirs.DCIMDir}/htmlToPDF/${props.folderName}/demo.pdf`,
       },
     })
-      .fetch(
-        'GET',
-        'http://e23e7ea4a329.ngrok.io/url/https://www.google.com',
-        {},
-      )
+      .fetch('GET', `http://da11c3102ea2.ngrok.io/url/${fileUrl}`, {})
       .then((res) => {
         // RNFetchBlob.fs.writeStream(
         //   `${dirs.DownloadDir}/demo.pdf`,

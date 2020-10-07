@@ -24,11 +24,13 @@ const FileSchema = {
     fileName: 'string',
     dateTime: 'date',
     scheduledAtDate: 'date',
+    scheduledAtDateStr: 'string',
     scheduledAtTime: 'date',
     location: 'string',
     fileUrl: 'string',
     isFavourite: 'int',
     isScheduled: 'int',
+    fileDueHour: 'int',
   },
 };
 
@@ -106,12 +108,25 @@ export default class DataModel extends Component {
 
   // schedule file for later reading
   setFileSchedule(fileId, date, time) {
+    let currentDate = new Date(date);
+    let currentMonth = currentDate.getMonth() + 1;
+
+    let queryDate =
+      currentDate.getDate() +
+      '-' +
+      currentMonth +
+      '-' +
+      currentDate.getFullYear();
+    console.log(queryDate);
+
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
     const file = realm.objects('PdfFile').filtered('id = $0', fileId);
     realm.write(() => {
       file[0].isScheduled = 1;
       file[0].scheduledAtDate = date;
       file[0].scheduledAtTime = time;
+      file[0].scheduledAtDateStr = queryDate;
+      file[0].fileDueHour = new Date(time).getHours();
     });
     const files = realm.objects('PdfFile').filtered('id = $0', fileId);
     console.log(files);
@@ -153,6 +168,30 @@ export default class DataModel extends Component {
       const file = realm.objects('PdfFile').filtered('id == $0', filedId);
       realm.delete(file);
     });
+  }
+
+  getTasksDueNow() {
+    let currentDate = new Date();
+    let currentMonth = currentDate.getMonth() + 1;
+
+    let queryDate =
+      currentDate.getDate() +
+      '-' +
+      currentMonth +
+      '-' +
+      currentDate.getFullYear();
+    let currentHour = currentDate.getHours();
+    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    const dueTasks = realm
+      .objects('PdfFile')
+      .filtered(
+        'scheduledAtDateStr == $0 AND fileDueHour == $1 AND isScheduled == $2',
+        queryDate,
+        currentHour,
+        1,
+      );
+
+    return dueTasks;
   }
 
   getCurrenntFolderId(realmDB) {

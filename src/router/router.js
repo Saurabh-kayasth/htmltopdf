@@ -49,7 +49,7 @@ function Tabs() {
           overflow: 'hidden',
         },
       }}>
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Home"
         component={Main}
         options={{
@@ -61,7 +61,7 @@ function Tabs() {
             />
           ),
         }}
-      /> */}
+      />
       <Tab.Screen
         name="Folder"
         component={Home}
