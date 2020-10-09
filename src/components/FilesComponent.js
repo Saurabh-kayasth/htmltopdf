@@ -30,13 +30,6 @@ const {width} = Dimensions.get('window');
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
-  const [showDatePicker, setShowDatePicker] = useState(false);
-  const [doneSelection, setDoneSelection] = useState(false);
-  //   let {state, dispatch} = useContext(FilesContext);
-  const [date, setDate] = useState(new Date());
-  const [time, setTime] = useState(new Date());
-  const [switchValue, setSwitchValue] = useState(false);
-
   const {
     id,
     fileName,
@@ -45,7 +38,17 @@ function FilesData(props) {
     dateTime,
     isFavourite,
     location,
+    scheduledAtDate,
+    scheduledAtTime,
   } = props.item;
+
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [doneSelection, setDoneSelection] = useState(false);
+  //   let {state, dispatch} = useContext(FilesContext);
+  const [date, setDate] = useState(new Date(scheduledAtDate));
+  const [time, setTime] = useState(new Date(scheduledAtTime));
+  const [switchValue, setSwitchValue] = useState(false);
+
   // console.log(isScheduled);
 
   useEffect(() => {
@@ -130,7 +133,7 @@ function FilesData(props) {
   };
 
   const getDisplayDateBySelectedMode = () => {
-    const {selectedMode} = ref.current;
+    // const {selectedMode} = ref.current;
     return new Date();
   };
 
@@ -147,18 +150,19 @@ function FilesData(props) {
       if (!doneSelection) {
         ref.current.selectedMode = 'time';
         setDate(selectedDate);
-        console.log(date);
+        console.log('hello ji', new Date(selectedDate).getMinutes());
         setDoneSelection(true);
         setShowDatePicker(true);
       } else {
+        console.log('hello jiji', new Date(selectedDate).getMinutes());
         setTime(selectedDate);
         ref.current.selectedMode = 'date';
         setDoneSelection(false);
-        console.log('-------===========------------');
+        // console.log('-------===========------------');
         setSwitchValue(true);
-        console.log(time);
+        // console.log(time);
         const dataModel = new DataModel();
-        dataModel.setFileSchedule(id, date, time);
+        dataModel.setFileSchedule(id, date, selectedDate);
         //   dispatch({type: 'sched'});
       }
     } else {
@@ -199,6 +203,16 @@ function FilesData(props) {
     dataModel.setFileUnshedule(id);
   };
 
+  const getFormattedDate = (date, time) => {
+    let newDate = new Date(date);
+    let newTime = new Date(time);
+    const mm = newDate.getMonth() + 1;
+    const newDateStr = `${newDate.getDate()}/${mm}/${newDate.getFullYear()}`;
+    const newTimeStr = `${newTime.getHours()}:${newTime.getMinutes()}`;
+    console.log(newDateStr + '  ' + newTimeStr);
+    return newDateStr + '  ' + newTimeStr;
+  };
+
   return (
     <>
       {showDatePicker && (
@@ -230,9 +244,7 @@ function FilesData(props) {
               <View style={styles.data}>
                 <Text style={styles.folderName}>{fileName}</Text>
                 <Text style={styles.description}>
-                  {switchValue
-                    ? moment(scheduledAt).calendar()
-                    : 'Not Scheduled'}
+                  {switchValue ? getFormattedDate(date, time) : 'Not Scheduled'}
                 </Text>
               </View>
             </View>
@@ -288,6 +300,7 @@ function FilesData(props) {
 }
 
 function FilesComponent(props) {
+  console.log(props.files);
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {
     if (props.favdispatch !== undefined) {

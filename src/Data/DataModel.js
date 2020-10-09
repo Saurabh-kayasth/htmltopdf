@@ -109,7 +109,7 @@ export default class DataModel extends Component {
   // schedule file for later reading
   setFileSchedule(fileId, date, time) {
     console.log('===========kkkkkkkkk============');
-    console.log(date, time);
+    console.log(new Date(time).getMinutes());
     let currentDate = new Date(date);
     let currentMonth = currentDate.getMonth() + 1;
 

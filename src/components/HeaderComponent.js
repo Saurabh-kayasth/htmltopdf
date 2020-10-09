@@ -1,11 +1,15 @@
 import React from 'react';
 import {View, StyleSheet, Text} from 'react-native';
 import {HeadingColor, PrimaryColor, SecondaryColor} from '../constants/Theme';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 function HeaderCompponent(props) {
   return (
     <View style={styles.container}>
       <Text style={styles.header}>{props.header}</Text>
+      {/* <View>
+        <Icon name="md-more" size={25} color="#fff" />
+      </View> */}
     </View>
   );
 }
