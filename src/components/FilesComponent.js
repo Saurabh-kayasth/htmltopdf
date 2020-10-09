@@ -1,4 +1,4 @@
-import React, {useState, useContext, useRef} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -9,14 +9,15 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   RefreshControl,
+  Switch,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import OptionsMenu from 'react-native-options-menu';
+// import OptionsMenu from 'react-native-options-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {
-  PrimaryColor,
-  PlaceholderColor,
+  // PrimaryColor,
+  // PlaceholderColor,
   SecondaryColor,
   HeadingColor,
   IconColor,
@@ -34,6 +35,7 @@ function FilesData(props) {
   //   let {state, dispatch} = useContext(FilesContext);
   const [date, setDate] = useState(new Date());
   const [time, setTime] = useState(new Date());
+  const [switchValue, setSwitchValue] = useState(false);
 
   const {
     id,
@@ -44,6 +46,13 @@ function FilesData(props) {
     isFavourite,
     location,
   } = props.item;
+  console.log(isScheduled);
+
+  useEffect(() => {
+    if (isScheduled) {
+      setSwitchValue(true);
+    }
+  }, []);
 
   const [favourite, setFavourite] = useState(isFavourite);
   const goToFolder = () => {
@@ -131,22 +140,30 @@ function FilesData(props) {
   });
 
   const handleDateTimePickerChange = (event, selectedDate = new Date()) => {
+    console.log(event.type);
     setShowDatePicker(false);
 
-    if (!doneSelection) {
-      ref.current.selectedMode = 'time';
-      setDate(selectedDate);
-      console.log(date);
-      setDoneSelection(true);
-      setShowDatePicker(true);
+    if (event.type !== 'dismissed') {
+      if (!doneSelection) {
+        ref.current.selectedMode = 'time';
+        setDate(selectedDate);
+        console.log(date);
+        setDoneSelection(true);
+        setShowDatePicker(true);
+      } else {
+        setTime(selectedDate);
+        ref.current.selectedMode = 'date';
+        setDoneSelection(false);
+        console.log('-------===========------------');
+        setSwitchValue(true);
+        console.log(time);
+        const dataModel = new DataModel();
+        dataModel.setFileSchedule(id, date, time);
+        //   dispatch({type: 'sched'});
+      }
     } else {
-      setTime(selectedDate);
-      ref.current.selectedMode = 'date';
       setDoneSelection(false);
-      console.log(time);
-      const dataModel = new DataModel();
-      dataModel.setFileSchedule(id, date, time);
-      //   dispatch({type: 'sched'});
+      setShowDatePicker(false);
     }
 
     // if (ref.current.selectedMode === 'date') {
@@ -157,7 +174,18 @@ function FilesData(props) {
     // }
   };
 
+  const handleToggle = () => {
+    // console.log(isScheduled);
+    console.log(switchValue);
+    if (!switchValue) {
+      setSelectedAndPickerModeAndOpenPicker();
+    } else {
+      unshedule();
+    }
+  };
+
   const setSelectedAndPickerModeAndOpenPicker = () => {
+    console.log(showDatePicker);
     ref.current.selectedMode = 'date';
     setShowDatePicker(true);
   };
@@ -167,7 +195,7 @@ function FilesData(props) {
     if (props.sheddispatch !== undefined) {
       props.sheddispatch({type: 'delete', payload: id});
     }
-
+    setSwitchValue(false);
     dataModel.setFileUnshedule(id);
   };
 
@@ -202,17 +230,17 @@ function FilesData(props) {
               <View style={styles.data}>
                 <Text style={styles.folderName}>{fileName}</Text>
                 <Text style={styles.description}>
-                  {isScheduled
-                    ? moment(new Date(scheduledAt)).calendar()
+                  {switchValue
+                    ? moment(scheduledAt).calendar()
                     : 'Not Scheduled'}
                 </Text>
               </View>
             </View>
 
             <View style={styles.dateTime}>
-              <Text style={styles.dateTimeText}>
-                {/* {moment(new Date(dateTime)).format('DD/MM/YY')} */}
-                {isScheduled ? (
+              {/* <Text style={styles.dateTimeText}> */}
+              {/* {moment(new Date(dateTime)).format('DD/MM/YY')} */}
+              {/* {isScheduled ? (
                   <OptionsMenu
                     customButton={<Icon name="menu" size={25} color="#000" />}
                     options={['Delete', 'Unshedule']}
@@ -228,10 +256,26 @@ function FilesData(props) {
                       setSelectedAndPickerModeAndOpenPicker,
                     ]}
                   />
-                )}
-
-                {/* <Icon name="clock" color="#2b2b39" size={25} /> */}
-              </Text>
+                )} */}
+              <View style={{flexDirection: 'row'}}>
+                <Icon name="clock" color="#4c6254" size={25} />
+                <Switch
+                  trackColor={{false: '#767577', true: '#4c6254'}}
+                  thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
+                  // style={{marginTop: 30}}
+                  onValueChange={handleToggle}
+                  value={switchValue}
+                />
+                {/* <Icon name="clock" color="#4c6254" size={25} />
+                  <Switch
+                    trackColor={{false: '#767577', true: '#4c6254'}}
+                    thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
+                    // style={{marginTop: 30}}
+                    onValueChange={handleToggle}
+                    value={switchValue}
+                  /> */}
+              </View>
+              {/* </Text> */}
               <Text style={styles.dateTimeText}>
                 {moment(new Date(dateTime)).calendar()}
               </Text>
