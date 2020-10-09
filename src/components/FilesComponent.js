@@ -46,13 +46,13 @@ function FilesData(props) {
     isFavourite,
     location,
   } = props.item;
-  console.log(isScheduled);
+  // console.log(isScheduled);
 
   useEffect(() => {
     if (isScheduled) {
       setSwitchValue(true);
     }
-  }, []);
+  }, [isScheduled]);
 
   const [favourite, setFavourite] = useState(isFavourite);
   const goToFolder = () => {
