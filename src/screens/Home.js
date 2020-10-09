@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useReducer} from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Clipboard} from 'react-native';
 import FoldersComponent from '../components/FoldersComponent';
 import {
   PrimaryColor,

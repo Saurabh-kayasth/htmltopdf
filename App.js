@@ -46,11 +46,12 @@ let markAttendanceWithPiTest = async () => {
   console.log(
     '============================hello bird============================',
   );
-  // NotificationComponent('hello message', 10);
+  NotificationComponent('hello message');
   // NotificationComponent('hello message two', 15);
 
   let persistentData = new DataModel();
   let tasks = persistentData.getTasksDueNow();
+  console.log('yyyyyyyyyyyyyyyyyyyy');
   console.log(tasks);
   let notificationMessage = '';
 
@@ -92,6 +93,11 @@ function App() {
   useEffect(() => {
     // NotificationComponent('hello message', 10);
     // NotificationComponent('hello message two', 15);
+
+    let persistentData = new DataModel();
+    let tasks = persistentData.getTasksDueNow();
+    console.log('xxxxxxxxxxxxxxxxxxxxxx');
+    console.log(tasks);
   }, []);
   return (
     <View style={styles.container}>

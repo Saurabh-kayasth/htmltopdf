@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   PermissionsAndroid,
   Alert,
+  Clipboard,
 } from 'react-native';
 import {
   HeadingColor,
@@ -19,7 +20,9 @@ import {
 import {TextInput} from 'react-native-gesture-handler';
 import DataModel from '../Data/DataModel';
 import RNFetchBlob from 'rn-fetch-blob';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const {config, fs} = RNFetchBlob;
+
 let PictureDir = fs.dirs.PictureDir; // this is the pictures directory. You can check the available directories in the wiki.
 let options = {
   fileCache: true,
@@ -109,6 +112,11 @@ function AddFileComponent(props) {
     }
   };
 
+  const fetchCopiedText = async () => {
+    const text = await Clipboard.getString();
+    setFileUrl(text);
+  };
+
   return (
     <Modal
       transparent={true}
@@ -124,13 +132,21 @@ function AddFileComponent(props) {
             value={fileName}
             onChangeText={(text) => setFileName(text)}
           />
-          <TextInput
-            placeholder="Enter URL..."
-            placeholderTextColor={PlaceholderColor}
-            style={styles.input}
-            value={fileUrl}
-            onChangeText={(text) => setFileUrl(text)}
-          />
+
+          <View style={styles.pasteContainer}>
+            <TextInput
+              placeholder="Enter URL..."
+              placeholderTextColor={PlaceholderColor}
+              style={[styles.input, {width: '82%', marginRight: 10}]}
+              value={fileUrl}
+              onChangeText={(text) => setFileUrl(text)}
+            />
+            <TouchableOpacity
+              style={styles.paste}
+              onPress={() => fetchCopiedText()}>
+              <Icon name="content-copy" size={23} color="#fff" />
+            </TouchableOpacity>
+          </View>
           <View style={styles.btnContainer}>
             <TouchableOpacity
               style={[styles.btn, {backgroundColor: SecondaryColor}]}
@@ -203,5 +219,26 @@ const styles = StyleSheet.create({
     fontSize: 17,
     color: '#fff',
     // fontWeight: 'bold',
+  },
+  pasteContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  paste: {
+    width: '15%',
+    height: 40,
+    borderRadius: 5,
+    elevation: 10,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'flex-end',
+    backgroundColor: SecondaryColor,
+    padding: 10,
+    marginTop: 10,
+    borderWidth: 0.2,
+    borderColor: HeadingColor,
+    color: HeadingColor,
   },
 });
