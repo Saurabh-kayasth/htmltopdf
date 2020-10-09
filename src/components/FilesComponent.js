@@ -258,7 +258,7 @@ function FilesData(props) {
                   />
                 )} */}
               <View style={{flexDirection: 'row'}}>
-                <Icon name="clock" color="#4c6254" size={25} />
+                <Icon name="clock" color="#40404c" size={25} />
                 <Switch
                   trackColor={{false: '#767577', true: '#4c6254'}}
                   thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
