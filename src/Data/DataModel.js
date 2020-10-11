@@ -51,8 +51,8 @@ export default class DataModel extends Component {
   // Add New Folder
   createFolder(folderObj) {
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
-    const id = this.getCurrenntFolderId(realm);
-    folderObj.id = id;
+    // const id = this.getCurrenntFolderId(realm);
+    // folderObj.id = id;
     realm.write(() => {
       realm.create('PdfFolder', folderObj, true);
     });
@@ -62,8 +62,8 @@ export default class DataModel extends Component {
   addFile(fileObj) {
     console.log(fileObj);
     let realm = new Realm({schema: [FolderSchema, FileSchema]});
-    const id = this.getCurrenntFileId(realm);
-    fileObj.id = id;
+    // const id = this.getCurrenntFileId(realm);
+    // fileObj.id = id;
     realm.write(() => {
       realm.create('PdfFile', fileObj, true);
     });

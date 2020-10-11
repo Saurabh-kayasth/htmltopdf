@@ -21,6 +21,7 @@ import {TextInput} from 'react-native-gesture-handler';
 import DataModel from '../Data/DataModel';
 import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Spinner from 'react-native-loading-spinner-overlay';
 const {config, fs} = RNFetchBlob;
 
 let PictureDir = fs.dirs.PictureDir; // this is the pictures directory. You can check the available directories in the wiki.
@@ -39,6 +40,7 @@ function AddFileComponent(props) {
   console.log(props);
   const [fileName, setFileName] = useState(String);
   const [fileUrl, setFileUrl] = useState(String);
+  const [spinner, setSpinner] = useState(false);
 
   const closeModal = () => {
     props.setModalVisible(false);
@@ -58,6 +60,7 @@ function AddFileComponent(props) {
     fileObj.fileDueHour = 0;
     fileObj.fileUrl = fileUrl;
     fileObj.location = path;
+    fileObj.id = new Date().getTime();
     dataModel.addFile(fileObj);
     props.dispatch({type: 'add', payload: fileObj});
     props.setModalVisible(false);
@@ -72,11 +75,17 @@ function AddFileComponent(props) {
         useDownloadManager: true,
         notification: true,
         mediaScannable: true,
-        title: 'demo.pdf',
-        path: `${dirs.DCIMDir}/htmlToPDF/${props.folderName}/demo.pdf`,
+        title: 'demosss.pdf',
+        path: `${dirs.DCIMDir}/htmlToPDF/${
+          props.folderName
+        }/${fileName}_${new Date().getTime()}.pdf`,
       },
     })
-      .fetch('GET', `http://da11c3102ea2.ngrok.io/url/${fileUrl}`, {})
+      .fetch(
+        'GET',
+        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`,
+        {},
+      )
       .then((res) => {
         // RNFetchBlob.fs.writeStream(
         //   `${dirs.DownloadDir}/demo.pdf`,
@@ -87,14 +96,17 @@ function AddFileComponent(props) {
         console.log(res);
         console.log('The file saved to ', res.path());
         addFile(res.path());
+        setSpinner(false);
       })
       .catch((e) => {
         console.log('-----------rrrrrr-----------------');
         console.log(e);
+        setSpinner(false);
       });
   };
 
   const downloadFile = async () => {
+    setSpinner(true);
     try {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -106,6 +118,7 @@ function AddFileComponent(props) {
           'Permission Denied!',
           'You need to give storage permission to download the file',
         );
+        setSpinner(false);
       }
     } catch (err) {
       console.warn(err);
@@ -118,56 +131,70 @@ function AddFileComponent(props) {
   };
 
   return (
-    <Modal
-      transparent={true}
-      animationType="slide"
-      onRequestClose={() => closeModal()}>
-      <View style={styles.container}>
-        <View style={styles.formContainer}>
-          <Text style={styles.heading}>ADD FILE</Text>
-          <TextInput
-            placeholder="Enter file name..."
-            placeholderTextColor={PlaceholderColor}
-            style={styles.input}
-            value={fileName}
-            onChangeText={(text) => setFileName(text)}
-          />
-
-          <View style={styles.pasteContainer}>
+    <>
+      <Modal
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => closeModal()}>
+        <View style={styles.container}>
+          <View style={styles.formContainer}>
+            <Text style={styles.heading}>ADD FILE</Text>
             <TextInput
-              placeholder="Enter URL..."
+              placeholder="Enter file name..."
               placeholderTextColor={PlaceholderColor}
-              style={[styles.input, {width: '82%', marginRight: 10}]}
-              value={fileUrl}
-              onChangeText={(text) => setFileUrl(text)}
+              style={styles.input}
+              value={fileName}
+              onChangeText={(text) => setFileName(text)}
             />
-            <TouchableOpacity
-              style={styles.paste}
-              onPress={() => fetchCopiedText()}>
-              <Icon name="content-copy" size={23} color="#fff" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.btnContainer}>
-            <TouchableOpacity
-              style={[styles.btn, {backgroundColor: SecondaryColor}]}
-              onPress={() => closeModal()}>
-              <Text style={[styles.btnText, {color: HeadingColor}]}>
-                CANCEL
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity style={styles.btn} onPress={() => downloadFile()}>
-              <Text style={styles.btnText}>ADD</Text>
-            </TouchableOpacity>
+
+            <View style={styles.pasteContainer}>
+              <TextInput
+                placeholder="Enter URL..."
+                placeholderTextColor={PlaceholderColor}
+                style={[styles.input, {width: '82%', marginRight: 10}]}
+                value={fileUrl}
+                onChangeText={(text) => setFileUrl(text)}
+              />
+              <TouchableOpacity
+                style={styles.paste}
+                onPress={() => fetchCopiedText()}>
+                <Icon name="content-copy" size={23} color="#fff" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.btnContainer}>
+              <TouchableOpacity
+                style={[styles.btn, {backgroundColor: SecondaryColor}]}
+                onPress={() => closeModal()}>
+                <Text style={[styles.btnText, {color: HeadingColor}]}>
+                  CANCEL
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.btn}
+                onPress={() => downloadFile()}>
+                <Text style={styles.btnText}>ADD</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
-    </Modal>
+      </Modal>
+      <Spinner
+        visible={spinner}
+        textContent={'Downloading...'}
+        animation="fade"
+        color="#6d8c79"
+        textStyle={styles.spinnerTextStyle}
+      />
+    </>
   );
 }
 
 export default AddFileComponent;
 
 const styles = StyleSheet.create({
+  spinnerTextStyle: {
+    color: '#6d8c79',
+  },
   container: {
     flex: 1,
     backgroundColor: 'rgba(0,0,0,0.5)',

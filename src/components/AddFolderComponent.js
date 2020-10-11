@@ -30,6 +30,7 @@ function AddFolderComponent(props) {
     const folderObj = {};
     folderObj.folderName = folderName;
     folderObj.dateTime = new Date();
+    folderObj.id = new Date().getTime();
     // folderObj.files = [];
     dataModel.createFolder(folderObj);
     props.dispatch({type: 'add', payload: folderObj});

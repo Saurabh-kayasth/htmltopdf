@@ -28,7 +28,7 @@ export const FilesReducer = (state = initialState, action) => {
       return {...state, files: [...filesData]};
     }
     case 'add': {
-      action.payload.id = state.files.length + 1;
+      // action.payload.id = state.files.length + 1;
       return {...state, files: [...state.files, action.payload]};
     }
     case 'delete': {

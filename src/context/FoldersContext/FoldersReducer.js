@@ -13,7 +13,7 @@ export const FolderReducer = (state = initialState, action) => {
     }
     case 'add': {
       console.log('adding ..............', state.folders.length);
-      action.payload.id = state.folders.length + 1;
+      // action.payload.id = state.folders.length + 1;
       return {...state, folders: [...state.folders, action.payload]};
     }
     case 'delete': {
