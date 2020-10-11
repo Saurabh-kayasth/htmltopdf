@@ -1,14 +1,10 @@
 import React, {useState, useEffect, useReducer} from 'react';
-import {View, StyleSheet, TouchableOpacity, Clipboard} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 import FoldersComponent from '../components/FoldersComponent';
-import {
-  PrimaryColor,
-  SecondaryColor,
-  BackgroundColor,
-} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddFolderComponent from '../components/AddFolderComponent';
 import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
+import {Styles} from '../styles/Styles';
 
 function Home(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -23,7 +19,7 @@ function Home(props) {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={Styles.container}>
       {state && (
         <FoldersComponent
           navigation={props.navigation}
@@ -32,7 +28,7 @@ function Home(props) {
         />
       )}
 
-      <TouchableOpacity style={styles.btn} onPress={() => addFolder()}>
+      <TouchableOpacity style={Styles.btn} onPress={() => addFolder()}>
         <Icon name="folder-plus" size={25} color="#fff" />
       </TouchableOpacity>
       {modalVisible && (
@@ -46,28 +42,3 @@ function Home(props) {
 }
 
 export default Home;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: BackgroundColor,
-  },
-  btn: {
-    height: 55,
-    width: 55,
-    borderRadius: 55 / 2,
-    backgroundColor: SecondaryColor,
-    elevation: 10,
-    position: 'absolute',
-    bottom: 30,
-    right: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  btnText: {
-    fontSize: 22,
-    color: '#fff',
-    fontWeight: 'bold',
-    zIndex: 10,
-  },
-});

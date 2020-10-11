@@ -15,11 +15,11 @@ import {
   PlaceholderColor,
   SecondaryColor,
 } from '../constants/Theme';
+import {Styles} from '../styles/Styles';
 
 const Main = () => {
   const [fileName, setFileName] = useState('');
   const [fileUrl, setFileUrl] = useState('');
-  // const [copiedText, setCopiedText] = useState('');
 
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
@@ -37,7 +37,7 @@ const Main = () => {
         value={fileName}
         onChangeText={(text) => setFileName(text)}
       />
-      <View style={styles.pasteContainer}>
+      <View style={Styles.pasteContainer}>
         <TextInput
           placeholder="Enter URL..."
           placeholderTextColor={PlaceholderColor}
@@ -46,7 +46,7 @@ const Main = () => {
           onChangeText={(text) => setFileUrl(text)}
         />
         <TouchableOpacity
-          style={styles.paste}
+          style={Styles.paste}
           onPress={() => fetchCopiedText()}>
           <Icon name="content-copy" size={23} color="#fff" />
         </TouchableOpacity>
@@ -98,26 +98,5 @@ const styles = StyleSheet.create({
   img: {
     width: '100%',
     height: 250,
-  },
-  pasteContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    alignContent: 'center',
-  },
-  paste: {
-    width: '15%',
-    height: 40,
-    borderRadius: 5,
-    elevation: 10,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-    alignSelf: 'flex-end',
-    backgroundColor: SecondaryColor,
-    padding: 10,
-    marginTop: 10,
-    borderWidth: 0.2,
-    borderColor: HeadingColor,
-    color: HeadingColor,
   },
 });

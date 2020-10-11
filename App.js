@@ -5,9 +5,9 @@ import {SecondaryColor, BackgroundColor} from './src/constants/Theme';
 import BackgroundFetch from 'react-native-background-fetch';
 import NotificationComponent from './src/components/NotificationComponent';
 import DataModel from './src/Data/DataModel';
-import PushNotification, {
-  PushNotificationScheduleObject,
-} from 'react-native-push-notification';
+// import PushNotification, {
+//   PushNotificationScheduleObject,
+// } from 'react-native-push-notification';
 
 BackgroundFetch.configure(
   {
@@ -46,7 +46,7 @@ let markAttendanceWithPiTest = async () => {
   console.log(
     '============================hello bird============================',
   );
-  NotificationComponent('hello message');
+  // NotificationComponent('hello message');
   // NotificationComponent('hello message two', 15);
 
   let persistentData = new DataModel();

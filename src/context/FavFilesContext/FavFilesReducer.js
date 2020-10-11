@@ -9,13 +9,13 @@ class Files {
     return files;
   }
 
-  deleteFile(fileId) {
-    //
-  }
+  // deleteFile(fileId) {
+  //   //
+  // }
 
-  addFile(fileObj) {
-    //
-  }
+  // addFile(fileObj) {
+  //   //
+  // }
 }
 
 let initialState = {files: []};

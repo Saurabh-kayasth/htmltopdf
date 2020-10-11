@@ -34,14 +34,6 @@ const FileSchema = {
   },
 };
 
-// const FavSchema = {
-//   name: 'FavFile',
-//   primaryKey: 'id',
-//   properties: {
-//     id: 'int',
-//   },
-// };
-
 export default class DataModel extends Component {
   constructor(props) {
     super(props);
@@ -196,11 +188,11 @@ export default class DataModel extends Component {
     return dueTasks;
   }
 
-  getCurrenntFolderId(realmDB) {
-    return realmDB.objects('PdfFolder').length + 1;
-  }
+  // getCurrenntFolderId(realmDB) {
+  //   return realmDB.objects('PdfFolder').length + 1;
+  // }
 
-  getCurrenntFileId(realmDB) {
-    return realmDB.objects('PdfFile').length + 1;
-  }
+  // getCurrenntFileId(realmDB) {
+  //   return realmDB.objects('PdfFile').length + 1;
+  // }
 }

@@ -1,9 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {
   View,
-  StyleSheet,
   Text,
-  Dimensions,
   FlatList,
   Animated,
   TouchableOpacity,
@@ -13,20 +11,11 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-// import OptionsMenu from 'react-native-options-menu';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {
-  // PrimaryColor,
-  // PlaceholderColor,
-  SecondaryColor,
-  HeadingColor,
-  IconColor,
-} from '../constants/Theme';
+import {IconColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
-// import {FilesContext, FilesContextConsumer} from '../context/indexxx';
-
-const {width} = Dimensions.get('window');
+import {styles} from '../styles/FilesStyles';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FilesData(props) {
@@ -34,7 +23,7 @@ function FilesData(props) {
     id,
     fileName,
     isScheduled,
-    scheduledAt,
+    // scheduledAt,
     dateTime,
     isFavourite,
     location,
@@ -346,72 +335,3 @@ function FilesComponent(props) {
 }
 
 export default FilesComponent;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  folderContainer: {
-    width: width - 20,
-    alignSelf: 'center',
-    backgroundColor: SecondaryColor,
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-    padding: 10,
-    paddingLeft: 5,
-    borderRadius: 10,
-    justifyContent: 'space-between',
-  },
-  filesData: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  folderName: {
-    fontSize: 16,
-    color: HeadingColor,
-    marginTop: 5,
-    fontWeight: 'bold',
-  },
-  data: {
-    marginLeft: 10,
-    // width: width - 150,
-  },
-  description: {
-    fontSize: 15,
-    color: 'gray',
-  },
-  btn: {
-    marginTop: 10,
-    width: 80,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: SecondaryColor,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  btnLeft: {
-    marginTop: 10,
-    width: 80,
-    marginLeft: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: SecondaryColor,
-    borderTopLeftRadius: 10,
-    borderBottomLeftRadius: 10,
-  },
-  dateTime: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-  },
-  dateTimeText: {
-    fontSize: 12,
-    color: IconColor,
-  },
-});

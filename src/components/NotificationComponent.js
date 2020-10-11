@@ -10,9 +10,9 @@ const NotificationComponent = (message) => {
     title: 'Scheduled File',
     message: message,
     // date: new Date(Date.now() + time * 1000),
-    // vibrate: true,
-    // vibration: 300,
-    // playSound: true,
+    vibrate: true,
+    vibration: 300,
+    playSound: true,
     // soundName: 'default',
     // actions: '["Read Now", "Read Later"]',
   });

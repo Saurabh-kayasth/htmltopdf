@@ -1,6 +1,5 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
@@ -8,11 +7,7 @@ import Home from '../screens/Home';
 import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
-import {
-  BackgroundColor,
-  PrimaryColor,
-  SecondaryColor,
-} from '../constants/Theme';
+import {SecondaryColor} from '../constants/Theme';
 import Pdf from '../screens/Pdf';
 import Main from '../screens/Main';
 

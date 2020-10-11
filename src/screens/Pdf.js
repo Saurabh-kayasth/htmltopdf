@@ -1,14 +1,12 @@
 import React from 'react';
-import {View, StyleSheet, TouchableOpacity} from 'react-native';
+import {View} from 'react-native';
 import HeaderCompponent from '../components/HeaderComponent';
 import PdfFileComponent from '../components/PdfFileComponent';
+import {Styles} from '../styles/Styles';
 
 function Pdf(props) {
-  console.log(props.route.params.location);
-  const shareFile = () => {};
-
   return (
-    <View style={styles.container}>
+    <View style={Styles.container}>
       <HeaderCompponent header={'Pdf_name'} />
       <PdfFileComponent location={props.route.params.location} />
     </View>
@@ -16,9 +14,3 @@ function Pdf(props) {
 }
 
 export default Pdf;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});

@@ -4,37 +4,25 @@ import {
   StyleSheet,
   Dimensions,
   Text,
-  // Share,
   TouchableOpacity,
 } from 'react-native';
 import Pdf from 'react-native-pdf';
-import {PrimaryColor} from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import RNFetchBlob from 'rn-fetch-blob';
 import Share from 'react-native-share';
-
+import {Styles} from '../styles/Styles';
 const {width, height} = Dimensions.get('window');
 
 function PdfFileComponent(props) {
-  console.log(props.location);
+  // console.log(props.location);
   const [currentPageNumber, setCurrentPageNumber] = useState(0);
   const [numberOfPages, setNumberOfPages] = useState(0);
-  console.log(`file://${props.location}`);
+  // console.log(`file://${props.location}`);
   const source = {
     uri: props.location,
     cache: true,
   };
 
   const share = async () => {
-    var shareOptions = {
-      title: 'Covid-19',
-      message: '\nCredit : WebsiteToPDF',
-      uri: `file://${props.location}`,
-      // message:
-      //   video.content + ' ' + 'http://freehitnews.com?link=' + video.media_uri,
-      // url: base64Data,
-      //subject: this.props.item.img_url, //  for email
-    };
     Share.open({
       title: 'This is my report ',
       message: 'Message:',
@@ -72,7 +60,7 @@ function PdfFileComponent(props) {
           <Text style={styles.text}>{currentPageNumber}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.btn} onPress={() => share()}>
+      <TouchableOpacity style={Styles.btn} onPress={() => share()}>
         <Icon name="share" size={25} color="#fff" />
       </TouchableOpacity>
     </View>
@@ -108,17 +96,5 @@ const styles = StyleSheet.create({
   },
   text: {
     color: '#fff',
-  },
-  btn: {
-    height: 55,
-    width: 55,
-    borderRadius: 55 / 2,
-    backgroundColor: PrimaryColor,
-    elevation: 10,
-    position: 'absolute',
-    bottom: 30,
-    right: 30,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

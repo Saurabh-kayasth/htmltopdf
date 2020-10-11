@@ -1,7 +1,6 @@
-import React, {useContext} from 'react';
+import React from 'react';
 import {
   View,
-  StyleSheet,
   Text,
   Dimensions,
   FlatList,
@@ -11,23 +10,13 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
-import {
-  PrimaryColor,
-  PlaceholderColor,
-  HeadingColor,
-  IconColor,
-  SecondaryColor,
-} from '../constants/Theme';
+import {IconColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
-// import {FilesContext, FilesContextConsumer} from '../context/indexxx';
-
-const {width} = Dimensions.get('window');
+import {styles} from '../styles/FilesStyles';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FolderData(props) {
-  // let {state, dispatch} = useContext(FilesContext);
-
   const goToFolder = (id, folderName, dateTime) => {
     const item = {};
     item.id = id;
@@ -115,64 +104,3 @@ function FoldersComponent(props) {
 }
 
 export default FoldersComponent;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-  folderContainer: {
-    width: width - 20,
-    alignSelf: 'center',
-    backgroundColor: SecondaryColor,
-    alignItems: 'center',
-    flexDirection: 'row',
-    marginTop: 10,
-    padding: 10,
-    paddingLeft: 5,
-    borderRadius: 10,
-    justifyContent: 'space-between',
-  },
-  folderData: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingLeft: 7,
-  },
-  folderName: {
-    fontSize: 16,
-    color: HeadingColor,
-    marginTop: 5,
-    fontWeight: 'bold',
-  },
-  data: {
-    marginLeft: 10,
-    // width: '55%',
-  },
-  description: {
-    fontSize: 15,
-    color: IconColor,
-  },
-  btn: {
-    marginTop: 10,
-    width: 110,
-    marginRight: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: SecondaryColor,
-    borderTopRightRadius: 10,
-    borderBottomRightRadius: 10,
-  },
-  dateTime: {
-    justifyContent: 'center',
-    alignItems: 'flex-end',
-    alignSelf: 'flex-end',
-  },
-  dateTimeText: {
-    fontSize: 12,
-    color: IconColor,
-  },
-});
