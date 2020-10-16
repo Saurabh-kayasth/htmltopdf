@@ -8,6 +8,7 @@ import {
   PermissionsAndroid,
   Alert,
   Clipboard,
+  ToastAndroid,
 } from 'react-native';
 import {
   HeadingColor,
@@ -20,12 +21,14 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Styles} from '../styles/Styles';
+import {useNetInfo} from '@react-native-community/netinfo';
 
 function AddFileComponent(props) {
   console.log(props);
   const [fileName, setFileName] = useState(String);
   const [fileUrl, setFileUrl] = useState(String);
   const [spinner, setSpinner] = useState(false);
+  const netInfo = useNetInfo();
 
   const closeModal = () => {
     props.setModalVisible(false);
@@ -81,22 +84,31 @@ function AddFileComponent(props) {
   };
 
   const downloadFile = async () => {
-    setSpinner(true);
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    let connected = netInfo.isConnected.toString();
+    if (connected === 'false') {
+      ToastAndroid.showWithGravity(
+        'No internet connection!',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
       );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        actualDownload();
-      } else {
-        Alert.alert(
-          'Permission Denied!',
-          'You need to give storage permission to download the file',
+    } else if (connected === 'true') {
+      setSpinner(true);
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
         );
-        setSpinner(false);
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          actualDownload();
+        } else {
+          Alert.alert(
+            'Permission Denied!',
+            'You need to give storage permission to download the file',
+          );
+          setSpinner(false);
+        }
+      } catch (err) {
+        console.warn(err);
       }
-    } catch (err) {
-      console.warn(err);
     }
   };
 
