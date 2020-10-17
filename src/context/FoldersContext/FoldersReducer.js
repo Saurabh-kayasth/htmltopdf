@@ -9,10 +9,11 @@ export const FolderReducer = (state = initialState, action) => {
     case 'get': {
       const dataModel = new DataModel();
       const folders = dataModel.getFolders();
+      console.log('get folders .....', folders);
       return {...state, folders: [...folders]};
     }
     case 'add': {
-      console.log('adding ..............', state.folders.length);
+      console.log('adding folder..............', action.payload);
       // action.payload.id = state.folders.length + 1;
       return {...state, folders: [...state.folders, action.payload]};
     }

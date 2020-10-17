@@ -5,6 +5,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AddFolderComponent from '../components/AddFolderComponent';
 import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
 import {Styles} from '../styles/Styles';
+import {useFocusEffect} from '@react-navigation/native';
 
 function Home(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -13,6 +14,28 @@ function Home(props) {
   useEffect(() => {
     dispatch({type: 'get'});
   }, [dispatch]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          if (isActive) {
+            dispatch({type: 'get'});
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
 
   const addFolder = () => {
     setModalVisible(true);

@@ -29,10 +29,10 @@ function FolderData(props) {
 
   const {id, folderName, dateTime} = props.item;
 
-  const deleteFolder = () => {
+  const deleteFolder = (e) => {
     const dataModel = new DataModel();
-    dataModel.deleteFolderWithId(id);
     props.dispatch({type: 'delete', payload: id});
+    dataModel.deleteFolderWithId(id);
   };
 
   const renderRightAction = (progress, dragX) => {
@@ -42,7 +42,7 @@ function FolderData(props) {
       extrapolate: 'clamp',
     });
     return (
-      <TouchableOpacity style={styles.btn} onPress={() => deleteFolder()}>
+      <TouchableOpacity style={styles.btn} onPress={deleteFolder}>
         <AnimatedIcon
           name="delete"
           size={45}

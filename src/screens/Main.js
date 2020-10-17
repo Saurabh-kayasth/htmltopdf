@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useReducer} from 'react';
 import {
   View,
   StyleSheet,
@@ -7,6 +7,9 @@ import {
   TouchableOpacity,
   Image,
   Clipboard,
+  ToastAndroid,
+  PermissionsAndroid,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
@@ -18,6 +21,11 @@ import {
 import {Styles} from '../styles/Styles';
 import DropDownPicker from 'react-native-dropdown-picker';
 import DataModel from '../Data/DataModel';
+import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
+import RNFetchBlob from 'rn-fetch-blob';
+import Spinner from 'react-native-loading-spinner-overlay';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Main = () => {
   const [fileName, setFileName] = useState('');
@@ -25,13 +33,16 @@ const Main = () => {
   const [fileUrl, setFileUrl] = useState('');
   const [state, setState] = useState('');
   const [folderList, setFolderList] = useState([]);
+  const [states, dispatch] = useReducer(FolderReducer);
+  const [spinner, setSpinner] = useState(false);
+  const netInfo = useNetInfo();
 
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
     setFileUrl(text);
   };
 
-  useEffect(() => {
+  const fetchFolders = () => {
     const dataModel = new DataModel();
     let folders = dataModel.getFolders();
     let foldersArr = [];
@@ -42,9 +53,45 @@ const Main = () => {
       folderObj.icon = () => <Icon name="folder" size={18} color="#fff" />;
       foldersArr.push(folderObj);
     }
-    setState(foldersArr[0].value);
-    setFolderList(foldersArr);
+    if (foldersArr.length > 0) {
+      setState(foldersArr[0].value);
+      setFolderList(foldersArr);
+    } else {
+      console.log('no folders');
+      setState('');
+      setFolderList([]);
+    }
+  };
+
+  useEffect(() => {
+    fetchFolders();
   }, []);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      let isActive = true;
+
+      const fetchUser = async () => {
+        try {
+          if (isActive) {
+            fetchFolders();
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      };
+
+      fetchUser();
+
+      return () => {
+        isActive = false;
+      };
+    }, []),
+  );
+
+  const handleDropDownOpen = () => {
+    fetchFolders();
+  };
 
   const onChangeItem = (item) => {
     console.log(item);
@@ -52,19 +99,117 @@ const Main = () => {
     setFolderName(item.label);
   };
 
-  const handleDropDownOpen = () => {
-    const dataModel = new DataModel();
-    let folders = dataModel.getFolders();
-    let foldersArr = [];
-    for (let i = 0; i < folders.length; i++) {
-      let folderObj = {};
-      folderObj.value = folders[i].id;
-      folderObj.label = folders[i].folderName;
-      folderObj.icon = () => <Icon name="folder" size={18} color="#fff" />;
-      foldersArr.push(folderObj);
+  const checkFolderExist = () => {
+    for (let i = 0; i < folderList.length; i++) {
+      let folderNameStr = folderName.toLowerCase();
+      if (folderList[i].label.toLowerCase() === folderNameStr) {
+        return folderList[i].value;
+      }
     }
-    setState(foldersArr[0].value);
-    setFolderList(foldersArr);
+    return false;
+  };
+
+  const downloadFile = () => {
+    let isExist = checkFolderExist();
+    if (isExist === false) {
+      console.log("Folder doesn't exist");
+      const dataModel = new DataModel();
+      const folderObj = {};
+      folderObj.folderName = folderName;
+      folderObj.dateTime = new Date();
+      const folderId = new Date().getTime();
+      folderObj.id = folderId;
+      setFolderList([
+        ...folderList,
+        {
+          label: folderName,
+          value: folderId,
+        },
+      ]);
+      dataModel.createFolder(folderObj);
+      dispatch({type: 'add', payload: folderObj});
+      downloadFileCheck(folderId);
+    } else {
+      console.log('Folder exist', isExist);
+      downloadFileCheck(isExist);
+    }
+  };
+
+  const addFile = (path, id) => {
+    const dataModel = new DataModel();
+    const fileObj = {};
+    fileObj.fileName = fileName;
+    fileObj.dateTime = new Date();
+    fileObj.folderId = id;
+    fileObj.isFavourite = 0;
+    fileObj.isScheduled = 0;
+    fileObj.scheduledAtDate = new Date();
+    fileObj.scheduledAtTime = new Date();
+    fileObj.scheduledAtDateStr = '';
+    fileObj.fileDueHour = 0;
+    fileObj.fileUrl = fileUrl;
+    fileObj.location = path;
+    fileObj.id = new Date().getTime();
+    dataModel.addFile(fileObj);
+  };
+
+  const actualDownload = async (id) => {
+    const {dirs} = RNFetchBlob.fs;
+    console.log('making request');
+    RNFetchBlob.config({
+      fileCache: true,
+      addAndroidDownloads: {
+        useDownloadManager: true,
+        notification: true,
+        mediaScannable: true,
+        title: `${fileName}_${new Date().getTime()}.pdf`,
+        path: `${
+          dirs.DCIMDir
+        }/htmlToPDF/${folderName}/${fileName}_${new Date().getTime()}.pdf`,
+      },
+    })
+      .fetch(
+        'GET',
+        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`,
+        {},
+      )
+      .then((res) => {
+        addFile(res.path(), id);
+        setSpinner(false);
+      })
+      .catch((e) => {
+        setSpinner(false);
+      });
+  };
+
+  const downloadFileCheck = async (id) => {
+    let connected = netInfo.isConnected.toString();
+    console.log(connected);
+    if (connected === 'false') {
+      ToastAndroid.showWithGravity(
+        'No internet connection!',
+        ToastAndroid.SHORT,
+        ToastAndroid.CENTER,
+      );
+    } else if (connected === 'true') {
+      setSpinner(true);
+      try {
+        const granted = await PermissionsAndroid.request(
+          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+        );
+        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+          actualDownload(id);
+        } else {
+          Alert.alert(
+            'Permission Denied!',
+            'You need to give storage permission to download the file',
+          );
+          setSpinner(false);
+        }
+      } catch (err) {
+        console.warn(err);
+      }
+    }
   };
 
   return (
@@ -122,10 +267,17 @@ const Main = () => {
           value={folderName}
           onChangeText={(text) => setFolderName(text)}
         />
-        <TouchableOpacity style={styles.btn}>
+        <TouchableOpacity style={styles.btn} onPress={downloadFile}>
           <Icon name="download" size={20} color={HeadingColor} />
         </TouchableOpacity>
       </View>
+      <Spinner
+        visible={spinner}
+        textContent={'Downloading...'}
+        animation="fade"
+        color="#6d8c79"
+        textStyle={{color: '#6d8c79'}}
+      />
     </View>
   );
 };
@@ -176,9 +328,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   dropdownContainer: {
-    backgroundColor: '#22222d',
-    borderWidth: 1,
-    borderColor: '#40404c',
+    backgroundColor: SecondaryColor,
+    borderWidth: 0.2,
+    borderColor: HeadingColor,
   },
   label: {
     fontSize: 14,
