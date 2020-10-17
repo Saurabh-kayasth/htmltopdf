@@ -176,6 +176,11 @@ const Main = () => {
       .then((res) => {
         addFile(res.path(), id);
         setSpinner(false);
+        ToastAndroid.showWithGravity(
+          'Downloaded successfully!',
+          ToastAndroid.SHORT,
+          ToastAndroid.BOTTOM,
+        );
       })
       .catch((e) => {
         setSpinner(false);
