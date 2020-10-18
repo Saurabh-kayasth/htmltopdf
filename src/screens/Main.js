@@ -26,6 +26,8 @@ import RNFetchBlob from 'rn-fetch-blob';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useFocusEffect} from '@react-navigation/native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {STORAGE_KEY} from '../constants/Constants';
 
 const Main = () => {
   const [fileName, setFileName] = useState('');
@@ -151,6 +153,9 @@ const Main = () => {
     fileObj.location = path;
     fileObj.id = new Date().getTime();
     dataModel.addFile(fileObj);
+    setFileName('');
+    setFolderName('');
+    setFileUrl('');
   };
 
   const actualDownload = async (id) => {

@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import MainStack from './src/router/router';
 import {SecondaryColor, BackgroundColor} from './src/constants/Theme';
 import BackgroundFetch from 'react-native-background-fetch';
 import NotificationComponent from './src/components/NotificationComponent';
 import DataModel from './src/Data/DataModel';
-// import PushNotification, {
-//   PushNotificationScheduleObject,
-// } from 'react-native-push-notification';
+import AppIntro from './src/screens/AppIntro';
+import AsyncStorage from '@react-native-community/async-storage';
+import {STORAGE_KEY} from './src/constants/Constants';
+import Main from './src/screens/Main';
 
 BackgroundFetch.configure(
   {
@@ -43,22 +44,14 @@ BackgroundFetch.status((status) => {
 });
 
 let markAttendanceWithPiTest = async () => {
-  console.log(
-    '============================hello bird============================',
-  );
-  // NotificationComponent('hello message');
-  // NotificationComponent('hello message two', 15);
-
   let persistentData = new DataModel();
   let tasks = persistentData.getTasksDueNow();
-  console.log('yyyyyyyyyyyyyyyyyyyy');
-  console.log(tasks);
   let notificationMessage = '';
 
   if (tasks != null && tasks.length > 0) {
     let suffString = '';
     if (tasks.length === 1) {
-      suffString = 'is due';
+      suffString = ' is due';
     } else if (tasks.length === 2) {
       suffString = ' and 1 other task is due';
     } else {
@@ -68,43 +61,48 @@ let markAttendanceWithPiTest = async () => {
     notificationMessage = taskName + suffString;
     NotificationComponent(notificationMessage);
   }
-  try {
-    let response = await fetch(
-      'https://facebook.github.io/react-native/movies.json',
-    );
-    let responseJson = await response.json(
-      BackgroundFetch.FETCH_RESULT_NEW_DATA,
-    );
-    console.log('[BackgroundFetch HeadlessTask response: ', responseJson);
-
-    // Notification('message');
-
-    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
-  } catch (error) {
-    BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_FAILED);
-  }
+  // try {
+  //   let response = await fetch(
+  //     'https://facebook.github.io/react-native/movies.json',
+  //   );
+  //   let responseJson = await response.json(
+  //     BackgroundFetch.FETCH_RESULT_NEW_DATA,
+  //   );
+  //   BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_NEW_DATA);
+  // } catch (error) {
+  //   BackgroundFetch.finish(BackgroundFetch.FETCH_RESULT_FAILED);
+  // }
 };
 
 // Register your BackgroundFetch HeadlessTask
 BackgroundFetch.registerHeadlessTask(markAttendanceWithPiTest);
 
 function App() {
-  console.disableYellowBox = true;
-  useEffect(() => {
-    // NotificationComponent('hello message', 10);
-    // NotificationComponent('hello message two', 15);
+  const [showMainApp, setShowMainApp] = useState(false);
+  const [loading, setLoading] = useState(true);
 
-    let persistentData = new DataModel();
-    let tasks = persistentData.getTasksDueNow();
-    console.log('xxxxxxxxxxxxxxxxxxxxxx');
-    console.log(tasks);
-  }, []);
+  useEffect(() => {
+    async function fetchMyAPI() {
+      const isShown = await AsyncStorage.getItem(STORAGE_KEY);
+      console.log(isShown);
+      if (isShown === null || isShown === 'false') {
+        setShowMainApp(false);
+        setLoading(false);
+      } else if (isShown === 'true') {
+        setShowMainApp(true);
+        setLoading(false);
+      }
+    }
+
+    fetchMyAPI();
+  }, [showMainApp]);
+
+  console.disableYellowBox = true;
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={SecondaryColor} barStyle="light-content" />
-      {/* <FoldersContextProvider> */}
-      <MainStack />
-      {/* </FoldersContextProvider> */}
+      {showMainApp && !loading && <MainStack />}
+      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />}
     </View>
   );
 }
