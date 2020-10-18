@@ -9,6 +9,7 @@ import AppIntro from './src/screens/AppIntro';
 import AsyncStorage from '@react-native-community/async-storage';
 import {STORAGE_KEY} from './src/constants/Constants';
 import Main from './src/screens/Main';
+import MyDrawer from './src/router/drawer';
 
 BackgroundFetch.configure(
   {
@@ -101,8 +102,9 @@ function App() {
   return (
     <View style={styles.container}>
       <StatusBar backgroundColor={SecondaryColor} barStyle="light-content" />
-      {showMainApp && !loading && <MainStack />}
-      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />}
+      <MyDrawer />
+      {/* {showMainApp && !loading && <MyDrawer />}
+      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />} */}
     </View>
   );
 }

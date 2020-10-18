@@ -21,7 +21,10 @@ function Folder(props) {
 
   return (
     <View style={Styles.container}>
-      <HeaderCompponent header={props.route.params.item.folderName} />
+      <HeaderCompponent
+        header={props.route.params.item.folderName}
+        icon={'folder'}
+      />
       {state && (
         <FilesComponent
           navigation={props.navigation}

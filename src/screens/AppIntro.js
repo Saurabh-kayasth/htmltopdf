@@ -30,7 +30,7 @@ const slides = [
     title: 'Title 2',
     text: 'Other cool stuff',
     description: 'Easily organise your documents',
-    image: require('../assets/down.png'),
+    image: require('../assets/F1.png'),
     backgroundColor: '#febe29',
   },
   {
@@ -38,7 +38,7 @@ const slides = [
     title: 'Rocket guy',
     text: "I'm already out of descriptions",
     description: 'Easily organise your documents',
-    image: require('../assets/down.png'),
+    image: require('../assets/F1.png'),
     backgroundColor: '#22bcb5',
   },
 ];

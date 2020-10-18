@@ -104,24 +104,20 @@ const Stack = createStackNavigator();
 
 export default function MainStack() {
   return (
-    <NavigationContainer>
-      <Stack.Navigator initialRouteName="tabs">
-        <Stack.Screen
-          component={Tabs}
-          name="tabs"
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          component={Folder}
-          name="folder"
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          component={Pdf}
-          name="pdf"
-          options={{headerShown: false}}
-        />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // <NavigationContainer>
+    <Stack.Navigator initialRouteName="tabs">
+      <Stack.Screen
+        component={Tabs}
+        name="tabs"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        component={Folder}
+        name="folder"
+        options={{headerShown: false}}
+      />
+      <Stack.Screen component={Pdf} name="pdf" options={{headerShown: false}} />
+    </Stack.Navigator>
+    // </NavigationContainer>
   );
 }

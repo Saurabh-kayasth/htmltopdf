@@ -48,7 +48,7 @@ function FilesData(props) {
 
   const [favourite, setFavourite] = useState(isFavourite);
   const goToFolder = () => {
-    props.navigation.navigate('pdf', {location: location});
+    props.navigation.navigate('pdf', {location: location, fileName: fileName});
   };
 
   const addToFav = () => {
