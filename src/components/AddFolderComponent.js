@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useState} from 'react';
-import {View, Modal, Text, TouchableOpacity} from 'react-native';
+import {View, Modal, Text, TouchableOpacity, StyleSheet} from 'react-native';
 import {
   HeadingColor,
   PlaceholderColor,
@@ -12,20 +12,56 @@ import {Styles} from '../styles/Styles';
 
 function AddFolderComponent(props) {
   const [folderName, setFolderName] = useState(String);
+  const [validation, updateValidation] = useState({
+    folderName: false,
+  });
+  const [submitted, setSubmitted] = useState(false);
+
   const clodeModal = () => {
     props.setModalVisible(false);
   };
 
   const createFolder = () => {
-    const dataModel = new DataModel();
-    const folderObj = {};
-    folderObj.folderName = folderName;
-    folderObj.dateTime = new Date();
-    folderObj.id = new Date().getTime();
-    // folderObj.files = [];
-    dataModel.createFolder(folderObj);
-    props.dispatch({type: 'add', payload: folderObj});
-    props.setModalVisible(false);
+    setSubmitted(true);
+    const isValid = checkValidation();
+    if (isValid) {
+      const dataModel = new DataModel();
+      const folderObj = {};
+      folderObj.folderName = folderName;
+      folderObj.dateTime = new Date();
+      folderObj.id = new Date().getTime();
+      // folderObj.files = [];
+      dataModel.createFolder(folderObj);
+      props.dispatch({type: 'add', payload: folderObj});
+      props.setModalVisible(false);
+    }
+  };
+
+  const handleFolderNameChange = (text) => {
+    if (text.length > 0) {
+      setFolderName(text);
+      updateValidation({
+        ...validation,
+        folderName: true,
+      });
+    } else {
+      setFolderName('');
+      updateValidation({
+        ...validation,
+        folderName: false,
+      });
+    }
+  };
+
+  const checkValidation = () => {
+    for (let key in validation) {
+      if (validation.hasOwnProperty(key)) {
+        if (!validation[key]) {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   return (
@@ -41,8 +77,11 @@ function AddFolderComponent(props) {
             placeholderTextColor={PlaceholderColor}
             style={Styles.input}
             value={folderName}
-            onChangeText={(text) => setFolderName(text)}
+            onChangeText={(text) => handleFolderNameChange(text)}
           />
+          {!validation.folderName && submitted && (
+            <Text style={styles.error}>Folder name can not be empty!</Text>
+          )}
           <View style={Styles.btnContainer}>
             <TouchableOpacity
               style={[Styles.submitBtn, {backgroundColor: SecondaryColor}]}
@@ -64,3 +103,9 @@ function AddFolderComponent(props) {
 }
 
 export default AddFolderComponent;
+
+const styles = StyleSheet.create({
+  error: {
+    color: 'red',
+  },
+});

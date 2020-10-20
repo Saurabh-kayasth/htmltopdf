@@ -51,6 +51,10 @@ const Main = () => {
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
     setFileUrl(text);
+    updateValidation({
+      ...validation,
+      fileUrl: true,
+    });
   };
 
   const fetchFolders = () => {

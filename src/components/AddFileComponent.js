@@ -9,6 +9,7 @@ import {
   Alert,
   Clipboard,
   ToastAndroid,
+  StyleSheet,
 } from 'react-native';
 import {
   HeadingColor,
@@ -29,6 +30,11 @@ function AddFileComponent(props) {
   const [fileUrl, setFileUrl] = useState(String);
   const [spinner, setSpinner] = useState(false);
   const netInfo = useNetInfo();
+  const [validation, updateValidation] = useState({
+    fileName: false,
+    fileUrl: false,
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const closeModal = () => {
     props.setModalVisible(false);
@@ -71,7 +77,7 @@ function AddFileComponent(props) {
     })
       .fetch(
         'GET',
-        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`,
+        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=True`,
         {},
       )
       .then((res) => {
@@ -84,30 +90,36 @@ function AddFileComponent(props) {
   };
 
   const downloadFile = async () => {
-    let connected = netInfo.isConnected.toString();
-    if (connected === 'false') {
-      ToastAndroid.showWithGravity(
-        'No internet connection!',
-        ToastAndroid.SHORT,
-        ToastAndroid.CENTER,
-      );
-    } else if (connected === 'true') {
-      setSpinner(true);
-      try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
+    console.log(validation);
+    setSubmitted(true);
+    const isValid = checkValidation();
+    console.log(isValid);
+    if (isValid) {
+      let connected = netInfo.isConnected.toString();
+      if (connected === 'false') {
+        ToastAndroid.showWithGravity(
+          'No internet connection!',
+          ToastAndroid.SHORT,
+          ToastAndroid.CENTER,
         );
-        if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          actualDownload();
-        } else {
-          Alert.alert(
-            'Permission Denied!',
-            'You need to give storage permission to download the file',
+      } else if (connected === 'true') {
+        setSpinner(true);
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
           );
-          setSpinner(false);
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            actualDownload();
+          } else {
+            Alert.alert(
+              'Permission Denied!',
+              'You need to give storage permission to download the file',
+            );
+            setSpinner(false);
+          }
+        } catch (err) {
+          console.warn(err);
         }
-      } catch (err) {
-        console.warn(err);
       }
     }
   };
@@ -115,6 +127,53 @@ function AddFileComponent(props) {
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
     setFileUrl(text);
+    updateValidation({
+      ...validation,
+      fileUrl: true,
+    });
+  };
+
+  const handleFileNameChange = (text) => {
+    if (text.length > 0) {
+      setFileName(text);
+      updateValidation({
+        ...validation,
+        fileName: true,
+      });
+    } else {
+      setFileName('');
+      updateValidation({
+        ...validation,
+        fileName: false,
+      });
+    }
+  };
+
+  const handleFileUrlChange = (text) => {
+    if (text.length > 0) {
+      setFileUrl(text);
+      updateValidation({
+        ...validation,
+        fileUrl: true,
+      });
+    } else {
+      setFileUrl('');
+      updateValidation({
+        ...validation,
+        fileUrl: false,
+      });
+    }
+  };
+
+  const checkValidation = () => {
+    for (let key in validation) {
+      if (validation.hasOwnProperty(key)) {
+        if (!validation[key]) {
+          return false;
+        }
+      }
+    }
+    return true;
   };
 
   return (
@@ -131,8 +190,11 @@ function AddFileComponent(props) {
               placeholderTextColor={PlaceholderColor}
               style={Styles.input}
               value={fileName}
-              onChangeText={(text) => setFileName(text)}
+              onChangeText={(text) => handleFileNameChange(text)}
             />
+            {!validation.fileName && submitted && (
+              <Text style={styles.error}>File name can not be empty!</Text>
+            )}
 
             <View style={Styles.pasteContainer}>
               <TextInput
@@ -140,7 +202,7 @@ function AddFileComponent(props) {
                 placeholderTextColor={PlaceholderColor}
                 style={[Styles.input, {width: '82%', marginRight: 10}]}
                 value={fileUrl}
-                onChangeText={(text) => setFileUrl(text)}
+                onChangeText={(text) => handleFileUrlChange(text)}
               />
               <TouchableOpacity
                 style={Styles.paste}
@@ -148,6 +210,9 @@ function AddFileComponent(props) {
                 <Icon name="content-copy" size={23} color="#fff" />
               </TouchableOpacity>
             </View>
+            {!validation.fileUrl && submitted && (
+              <Text style={styles.error}>Url can not be empty!</Text>
+            )}
             <View style={Styles.btnContainer}>
               <TouchableOpacity
                 style={[Styles.submitBtn, {backgroundColor: SecondaryColor}]}
@@ -177,3 +242,9 @@ function AddFileComponent(props) {
 }
 
 export default AddFileComponent;
+
+const styles = StyleSheet.create({
+  error: {
+    color: 'red',
+  },
+});
