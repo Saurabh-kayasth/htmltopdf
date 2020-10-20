@@ -34,6 +34,13 @@ const FileSchema = {
   },
 };
 
+const SettingSchema = {
+  name: 'WPCSettings',
+  properties: {
+    lazyLoad: 'string',
+  },
+};
+
 export default class DataModel extends Component {
   constructor(props) {
     super(props);
@@ -42,7 +49,7 @@ export default class DataModel extends Component {
   }
   // Add New Folder
   createFolder(folderObj) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     // const id = this.getCurrenntFolderId(realm);
     // folderObj.id = id;
     realm.write(() => {
@@ -53,7 +60,7 @@ export default class DataModel extends Component {
   // Add New File
   addFile(fileObj) {
     console.log(fileObj);
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     // const id = this.getCurrenntFileId(realm);
     // fileObj.id = id;
     realm.write(() => {
@@ -63,21 +70,21 @@ export default class DataModel extends Component {
 
   // get only folders
   getFolders() {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const folders = realm.objects('PdfFolder');
     return folders;
   }
 
   // get files only for given folder id
   getFilesWithFolderId(folderId) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const files = realm.objects('PdfFile').filtered('folderId = $0', folderId);
     return files;
   }
 
   // add file to favourite
   addToFavWithFileId(fileId, status) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const file = realm.objects('PdfFile').filtered('id = $0', fileId);
     realm.write(() => {
       file[0].isFavourite = status;
@@ -86,14 +93,14 @@ export default class DataModel extends Component {
 
   // favourite files
   getFavFiles() {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const files = realm.objects('PdfFile').filtered('isFavourite = $0', 1);
     return files;
   }
 
   // number of files inside folder
   getNumberOfFilesFromFolderId(folderId) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const files = realm.objects('PdfFile').filtered('folderId = $0', folderId);
     return files.length;
   }
@@ -113,7 +120,7 @@ export default class DataModel extends Component {
       currentDate.getFullYear();
     console.log(queryDate);
 
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const file = realm.objects('PdfFile').filtered('id = $0', fileId);
     realm.write(() => {
       file[0].isScheduled = 1;
@@ -127,7 +134,7 @@ export default class DataModel extends Component {
   }
 
   setFileUnshedule(fileId) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const file = realm.objects('PdfFile').filtered('id = $0', fileId);
     realm.write(() => {
       file[0].isScheduled = 0;
@@ -136,7 +143,7 @@ export default class DataModel extends Component {
 
   // get all scheduled files
   getScheduledFiles() {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const files = realm.objects('PdfFile').filtered('isScheduled = $0', 1);
     return files;
   }
@@ -144,7 +151,7 @@ export default class DataModel extends Component {
   // delete folder and files inside it
   deleteFolderWithId(folderId) {
     console.log('FOLDER ID ================== ', folderId);
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     realm.write(() => {
       const folder = realm.objects('PdfFolder').filtered('id == $0', folderId);
       const files = realm
@@ -157,7 +164,7 @@ export default class DataModel extends Component {
 
   // delete particular file
   deleteFileWithId(filedId) {
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     realm.write(() => {
       const file = realm.objects('PdfFile').filtered('id == $0', filedId);
       realm.delete(file);
@@ -175,7 +182,7 @@ export default class DataModel extends Component {
       '-' +
       currentDate.getFullYear();
     let currentHour = currentDate.getHours();
-    let realm = new Realm({schema: [FolderSchema, FileSchema]});
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
     const dueTasks = realm
       .objects('PdfFile')
       .filtered(
@@ -186,6 +193,18 @@ export default class DataModel extends Component {
       );
 
     return dueTasks;
+  }
+
+  setLazyLoad(value) {
+    console.log(value);
+    let realm = new Realm({schema: [FolderSchema, FileSchema, SettingSchema]});
+    const dict = {
+      lazyLoad: value.toString(),
+    };
+    console.log(dict);
+    realm.write(() => {
+      realm.create('WPCSettings', dict, true);
+    });
   }
 
   // getCurrenntFolderId(realmDB) {

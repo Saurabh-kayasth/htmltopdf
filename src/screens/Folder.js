@@ -6,6 +6,7 @@ import AddFileComponent from '../components/AddFileComponent';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FilesReducer} from '../context/FIlesContext/FilesReducer';
 import {Styles} from '../styles/Styles';
+import {IconColor} from '../constants/Theme';
 
 function Folder(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -34,7 +35,7 @@ function Folder(props) {
       )}
 
       <TouchableOpacity style={Styles.btn} onPress={() => addFile()}>
-        <Icon name="file-plus" size={25} color="#fff" />
+        <Icon name="file-plus" size={25} color={IconColor} />
       </TouchableOpacity>
       {modalVisible && (
         <AddFileComponent

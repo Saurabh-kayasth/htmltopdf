@@ -1,7 +1,11 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
 import MainStack from './src/router/router';
-import {SecondaryColor, BackgroundColor} from './src/constants/Theme';
+import {
+  SecondaryColor,
+  BackgroundColor,
+  StatusBarContent,
+} from './src/constants/Theme';
 import BackgroundFetch from 'react-native-background-fetch';
 import NotificationComponent from './src/components/NotificationComponent';
 import DataModel from './src/Data/DataModel';
@@ -101,10 +105,13 @@ function App() {
   console.disableYellowBox = true;
   return (
     <View style={styles.container}>
-      <StatusBar backgroundColor={SecondaryColor} barStyle="light-content" />
-      <MyDrawer />
-      {/* {showMainApp && !loading && <MyDrawer />}
-      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />} */}
+      <StatusBar
+        backgroundColor={SecondaryColor}
+        barStyle={`${StatusBarContent}-content`}
+      />
+      {/* <MyDrawer /> */}
+      {showMainApp && !loading && <MyDrawer />}
+      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />}
     </View>
   );
 }

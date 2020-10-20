@@ -14,7 +14,9 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {
   BackgroundColor,
+  BorderColor,
   HeadingColor,
+  IconColor,
   PlaceholderColor,
   SecondaryColor,
 } from '../constants/Theme';
@@ -28,6 +30,7 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {STORAGE_KEY} from '../constants/Constants';
+import {sub} from 'react-native-reanimated';
 
 const Main = () => {
   const [fileName, setFileName] = useState('');
@@ -38,6 +41,12 @@ const Main = () => {
   const [states, dispatch] = useReducer(FolderReducer);
   const [spinner, setSpinner] = useState(false);
   const netInfo = useNetInfo();
+  const [validation, updateValidation] = useState({
+    fileName: false,
+    fileUrl: false,
+    folderName: false,
+  });
+  const [submitted, setSubmitted] = useState(false);
 
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
@@ -52,7 +61,9 @@ const Main = () => {
       let folderObj = {};
       folderObj.value = folders[i].id;
       folderObj.label = folders[i].folderName;
-      folderObj.icon = () => <Icon name="folder" size={18} color="#fff" />;
+      folderObj.icon = () => (
+        <Icon name="folder-outline" size={18} color={IconColor} />
+      );
       foldersArr.push(folderObj);
     }
     if (foldersArr.length > 0) {
@@ -99,6 +110,10 @@ const Main = () => {
     console.log(item);
     setState(item.value);
     setFolderName(item.label);
+    updateValidation({
+      ...validation,
+      folderName: true,
+    });
   };
 
   const checkFolderExist = () => {
@@ -112,28 +127,34 @@ const Main = () => {
   };
 
   const downloadFile = () => {
-    let isExist = checkFolderExist();
-    if (isExist === false) {
-      console.log("Folder doesn't exist");
-      const dataModel = new DataModel();
-      const folderObj = {};
-      folderObj.folderName = folderName;
-      folderObj.dateTime = new Date();
-      const folderId = new Date().getTime();
-      folderObj.id = folderId;
-      setFolderList([
-        ...folderList,
-        {
-          label: folderName,
-          value: folderId,
-        },
-      ]);
-      dataModel.createFolder(folderObj);
-      dispatch({type: 'add', payload: folderObj});
-      downloadFileCheck(folderId);
-    } else {
-      console.log('Folder exist', isExist);
-      downloadFileCheck(isExist);
+    console.log(validation);
+    setSubmitted(true);
+    const isValid = checkValidation();
+    console.log(isValid);
+    if (isValid) {
+      let isExist = checkFolderExist();
+      if (isExist === false) {
+        console.log("Folder doesn't exist");
+        const dataModel = new DataModel();
+        const folderObj = {};
+        folderObj.folderName = folderName;
+        folderObj.dateTime = new Date();
+        const folderId = new Date().getTime();
+        folderObj.id = folderId;
+        setFolderList([
+          ...folderList,
+          {
+            label: folderName,
+            value: folderId,
+          },
+        ]);
+        dataModel.createFolder(folderObj);
+        dispatch({type: 'add', payload: folderObj});
+        downloadFileCheck(folderId);
+      } else {
+        console.log('Folder exist', isExist);
+        downloadFileCheck(isExist);
+      }
     }
   };
 
@@ -175,7 +196,7 @@ const Main = () => {
     })
       .fetch(
         'GET',
-        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`,
+        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=true`,
         {},
       )
       .then((res) => {
@@ -222,6 +243,65 @@ const Main = () => {
     }
   };
 
+  const handleFileNameChange = (text) => {
+    if (text.length > 0) {
+      setFileName(text);
+      updateValidation({
+        ...validation,
+        fileName: true,
+      });
+    } else {
+      setFileName('');
+      updateValidation({
+        ...validation,
+        fileName: false,
+      });
+    }
+  };
+
+  const handleFileUrlChange = (text) => {
+    if (text.length > 0) {
+      setFileUrl(text);
+      updateValidation({
+        ...validation,
+        fileUrl: true,
+      });
+    } else {
+      setFileUrl('');
+      updateValidation({
+        ...validation,
+        fileUrl: false,
+      });
+    }
+  };
+
+  const handleFolderNameChange = (text) => {
+    if (text.length > 0) {
+      setFolderName(text);
+      updateValidation({
+        ...validation,
+        folderName: true,
+      });
+    } else {
+      setFolderName('');
+      updateValidation({
+        ...validation,
+        folderName: false,
+      });
+    }
+  };
+
+  const checkValidation = () => {
+    for (let key in validation) {
+      if (validation.hasOwnProperty(key)) {
+        if (!validation[key]) {
+          return false;
+        }
+      }
+    }
+    return true;
+  };
+
   return (
     <View style={styles.container}>
       {/* <Image source={require('../assets/down.png')} style={styles.img} /> */}
@@ -231,22 +311,29 @@ const Main = () => {
         placeholderTextColor={PlaceholderColor}
         style={styles.input}
         value={fileName}
-        onChangeText={(text) => setFileName(text)}
+        onChangeText={(text) => handleFileNameChange(text)}
       />
+      {!validation.fileName && submitted && (
+        <Text style={styles.error}>File name can not be empty!</Text>
+      )}
+
       <View style={Styles.pasteContainer}>
         <TextInput
           placeholder="Enter URL..."
           placeholderTextColor={PlaceholderColor}
           style={[styles.input, {width: '82%', marginRight: 10}]}
           value={fileUrl}
-          onChangeText={(text) => setFileUrl(text)}
+          onChangeText={(text) => handleFileUrlChange(text)}
         />
         <TouchableOpacity
           style={Styles.paste}
           onPress={() => fetchCopiedText()}>
-          <Icon name="content-copy" size={23} color="#fff" />
+          <Icon name="content-copy" size={23} color={IconColor} />
         </TouchableOpacity>
       </View>
+      {!validation.fileUrl && submitted && (
+        <Text style={styles.error}>Url can not be empty!</Text>
+      )}
 
       <DropDownPicker
         items={folderList}
@@ -258,14 +345,16 @@ const Main = () => {
         selectedtLabelStyle={styles.selectedtLabelStyle}
         searchable={true}
         searchablePlaceholder="Search for a folder"
-        searchableError={() => <Text style={{color: '#fff'}}>Not Found</Text>}
+        searchableError={() => (
+          <Text style={{color: HeadingColor}}>Not Found</Text>
+        )}
         searchablePlaceholderTextColor="gray"
-        seachableStyle={{color: '#fff'}}
+        seachableStyle={{color: IconColor}}
         itemStyle={styles.itemStyle}
         dropDownStyle={styles.dropDownStyle}
         onChangeItem={(item) => onChangeItem(item)}
         arrowStyle={styles.arrowStyle}
-        arrowColor="#fff"
+        arrowColor={IconColor}
         zIndex={400}
         onOpen={handleDropDownOpen}
       />
@@ -275,12 +364,16 @@ const Main = () => {
           placeholderTextColor={PlaceholderColor}
           style={[styles.input, {width: '82%', marginRight: 10}]}
           value={folderName}
-          onChangeText={(text) => setFolderName(text)}
+          onChangeText={(text) => handleFolderNameChange(text)}
         />
         <TouchableOpacity style={styles.btn} onPress={downloadFile}>
           <Icon name="download" size={20} color={HeadingColor} />
         </TouchableOpacity>
       </View>
+      {!validation.folderName && submitted && (
+        <Text style={styles.error}>Folder name can not be empty!</Text>
+      )}
+
       <Spinner
         visible={spinner}
         textContent={'Downloading...'}
@@ -345,7 +438,7 @@ const styles = StyleSheet.create({
   label: {
     fontSize: 14,
     textAlign: 'left',
-    color: '#fff',
+    color: HeadingColor,
     marginLeft: 15,
   },
   selectedtLabelStyle: {
@@ -355,11 +448,14 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start',
   },
   dropDownStyle: {
-    backgroundColor: '#333333',
+    backgroundColor: SecondaryColor,
     borderWidth: 1,
-    borderColor: '#40404c',
+    borderColor: BorderColor,
   },
   arrowStyle: {
     marginRight: 10,
+  },
+  error: {
+    color: 'red',
   },
 });

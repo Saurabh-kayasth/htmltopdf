@@ -12,12 +12,13 @@ import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import Help from '../screens/Help';
 import Privacy from '../screens/Privacy';
 import Settings from '../screens/Settings';
+import {SecondaryColor} from '../constants/Theme';
 
 const Drawer = createDrawerNavigator();
 
 function CustomDrawerContent(props) {
   return (
-    <View style={{flex: 1, backgroundColor: '#141f27'}}>
+    <View style={styles.drawerContainer}>
       <DrawerContentScrollView {...props}>
         <View style={styles.topContainer}>
           <Image source={require('../assets/F1.png')} style={styles.profile} />
@@ -56,7 +57,7 @@ const MyDrawer = () => {
   return (
     <NavigationContainer>
       <Drawer.Navigator
-        drawerType="front"
+        drawerType="back"
         edgeWidth={100}
         initialRouteName="HomeStack"
         drawerContent={(props) => <CustomDrawerContent {...props} />}>
@@ -74,6 +75,10 @@ const MyDrawer = () => {
 export default MyDrawer;
 
 const styles = StyleSheet.create({
+  drawerContainer: {
+    flex: 1,
+    backgroundColor: SecondaryColor,
+  },
   header: {
     height: 60,
     width: '100%',

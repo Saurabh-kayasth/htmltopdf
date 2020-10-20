@@ -12,8 +12,6 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 const {width} = Dimensions.get('window');
 
 function FileHeaderCompponent(props) {
-  console.log('=====================');
-  console.log(props.navigation.goBack);
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={props.navigation.goBack}>

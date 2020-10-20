@@ -7,7 +7,11 @@ import Home from '../screens/Home';
 import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
-import {SecondaryColor} from '../constants/Theme';
+import {
+  ACTIVE_TINT_COLOR,
+  INACTIVE_TINT_COLOR,
+  SecondaryColor,
+} from '../constants/Theme';
 import Pdf from '../screens/Pdf';
 import Main from '../screens/Main';
 
@@ -19,8 +23,8 @@ function Tabs() {
       initialRouteName="Home"
       swipeEnabled={false}
       tabBarOptions={{
-        activeTintColor: '#fff',
-        inactiveTintColor: '#e5e5e5',
+        activeTintColor: ACTIVE_TINT_COLOR,
+        inactiveTintColor: INACTIVE_TINT_COLOR,
         showLabel: false,
         showIcon: true,
 

@@ -65,7 +65,7 @@ export const Styles = StyleSheet.create({
   },
   formContainer: {
     width: width - 30,
-    backgroundColor: PrimaryColor,
+    backgroundColor: SecondaryColor,
     alignSelf: 'center',
     borderRadius: 10,
     padding: 15,
@@ -74,8 +74,9 @@ export const Styles = StyleSheet.create({
   },
   heading: {
     fontSize: 20,
-    color: '#fff',
+    color: HeadingColor,
     marginBottom: 5,
+    fontWeight: 'bold',
   },
 
   btnContainer: {

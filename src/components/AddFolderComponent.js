@@ -35,7 +35,7 @@ function AddFolderComponent(props) {
       onRequestClose={() => clodeModal()}>
       <View style={Styles.modelContainer}>
         <View style={Styles.formContainer}>
-          <Text style={Styles.heading}>ENTER FOLDER NAME</Text>
+          <Text style={Styles.heading}>ADD FOLDER</Text>
           <TextInput
             placeholder="Enter folder name..."
             placeholderTextColor={PlaceholderColor}

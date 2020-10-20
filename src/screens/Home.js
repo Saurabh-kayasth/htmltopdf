@@ -6,6 +6,7 @@ import AddFolderComponent from '../components/AddFolderComponent';
 import {FolderReducer} from '../context/FoldersContext/FoldersReducer';
 import {Styles} from '../styles/Styles';
 import {useFocusEffect} from '@react-navigation/native';
+import {IconColor} from '../constants/Theme';
 
 function Home(props) {
   const [modalVisible, setModalVisible] = useState(false);
@@ -52,7 +53,7 @@ function Home(props) {
       )}
 
       <TouchableOpacity style={Styles.btn} onPress={() => addFolder()}>
-        <Icon name="folder-plus" size={25} color="#fff" />
+        <Icon name="folder-plus" size={25} color={IconColor} />
       </TouchableOpacity>
       {modalVisible && (
         <AddFolderComponent
