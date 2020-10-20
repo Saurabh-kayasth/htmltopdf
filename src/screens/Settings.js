@@ -8,18 +8,15 @@ import {
   SecondaryColor,
 } from '../constants/Theme';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import DataModel from '../Data/DataModel';
 
 function Settings(props) {
   const [switchValue, setSwitchValue] = useState(false);
 
   const handleToggle = () => {
     setSwitchValue(!switchValue);
-    const dataModel = new DataModel();
-    dataModel.setLazyLoad(!switchValue);
   };
 
-  const onTabSelection = (tabName) => {};
+  // const onTabSelection = (tabName) => {};
 
   return (
     <View style={styles.container}>
