@@ -29,8 +29,8 @@ import Spinner from 'react-native-loading-spinner-overlay';
 import {useNetInfo} from '@react-native-community/netinfo';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {STORAGE_KEY} from '../constants/Constants';
-import {sub} from 'react-native-reanimated';
+import {LAZY_LOAD_KEY, STORAGE_KEY} from '../constants/Constants';
+// import {sub} from 'react-native-reanimated';
 
 const Main = () => {
   const [fileName, setFileName] = useState('');
@@ -47,6 +47,7 @@ const Main = () => {
     folderName: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [lazyLoad, setLazyLoad] = useState();
 
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
@@ -82,7 +83,22 @@ const Main = () => {
 
   useEffect(() => {
     fetchFolders();
+    getLazyStatus();
   }, []);
+
+  const getLazyStatus = async () => {
+    const isLazyLoadEnabled = await AsyncStorage.getItem(LAZY_LOAD_KEY);
+    console.log('=================', isLazyLoadEnabled);
+    if (isLazyLoadEnabled === null || isLazyLoadEnabled === undefined) {
+      setLazyLoad(false);
+    } else {
+      if (isLazyLoadEnabled === 'TRUE') {
+        setLazyLoad(true);
+      } else {
+        setLazyLoad(false);
+      }
+    }
+  };
 
   useFocusEffect(
     React.useCallback(() => {
@@ -123,7 +139,7 @@ const Main = () => {
   const checkFolderExist = () => {
     for (let i = 0; i < folderList.length; i++) {
       let folderNameStr = folderName.toUpperCase();
-      if (folderList[i].label.toLowerCase() === folderNameStr) {
+      if (folderList[i].label.toUpperCase() === folderNameStr) {
         return folderList[i].value;
       }
     }
@@ -186,6 +202,10 @@ const Main = () => {
   const actualDownload = async (id) => {
     const {dirs} = RNFetchBlob.fs;
     console.log('making request');
+    let downloadUrl = `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`;
+    if (lazyLoad) {
+      downloadUrl = `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=true`;
+    }
     RNFetchBlob.config({
       fileCache: true,
       addAndroidDownloads: {
@@ -198,11 +218,7 @@ const Main = () => {
         }/htmlToPDF/${folderName}/${fileName}_${new Date().getTime()}.pdf`,
       },
     })
-      .fetch(
-        'GET',
-        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=true`,
-        {},
-      )
+      .fetch('GET', downloadUrl, {})
       .then((res) => {
         addFile(res.path(), id);
         setSpinner(false);
