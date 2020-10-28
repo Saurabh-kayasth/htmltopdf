@@ -88,7 +88,7 @@ const Main = () => {
     React.useCallback(() => {
       let isActive = true;
 
-      const fetchUser = async () => {
+      const checkFolders = async () => {
         try {
           if (isActive) {
             fetchFolders();
@@ -98,7 +98,7 @@ const Main = () => {
         }
       };
 
-      fetchUser();
+      checkFolders();
 
       return () => {
         isActive = false;
@@ -122,7 +122,7 @@ const Main = () => {
 
   const checkFolderExist = () => {
     for (let i = 0; i < folderList.length; i++) {
-      let folderNameStr = folderName.toLowerCase();
+      let folderNameStr = folderName.toUpperCase();
       if (folderList[i].label.toLowerCase() === folderNameStr) {
         return folderList[i].value;
       }
@@ -131,17 +131,17 @@ const Main = () => {
   };
 
   const downloadFile = () => {
-    console.log(validation);
+    // console.log(validation);
     setSubmitted(true);
     const isValid = checkValidation();
-    console.log(isValid);
+    // console.log(isValid);
     if (isValid) {
       let isExist = checkFolderExist();
       if (isExist === false) {
         console.log("Folder doesn't exist");
         const dataModel = new DataModel();
         const folderObj = {};
-        folderObj.folderName = folderName;
+        folderObj.folderName = folderName.toUpperCase();
         folderObj.dateTime = new Date();
         const folderId = new Date().getTime();
         folderObj.id = folderId;
@@ -306,6 +306,34 @@ const Main = () => {
     return true;
   };
 
+  const renderDropDown = () => {
+    return (
+      <DropDownPicker
+        items={folderList}
+        defaultValue={state}
+        placeholder="Select a folder..."
+        containerStyle={styles.dropmain}
+        style={styles.dropdownContainer}
+        labelStyle={styles.label}
+        selectedtLabelStyle={styles.selectedtLabelStyle}
+        searchable={true}
+        searchablePlaceholder="Search for a folder"
+        searchableError={() => (
+          <Text style={{color: HeadingColor}}>Not Found</Text>
+        )}
+        searchablePlaceholderTextColor="gray"
+        seachableStyle={{color: IconColor}}
+        itemStyle={styles.itemStyle}
+        dropDownStyle={styles.dropDownStyle}
+        onChangeItem={(item) => onChangeItem(item)}
+        arrowStyle={styles.arrowStyle}
+        arrowColor={IconColor}
+        zIndex={400}
+        onOpen={handleDropDownOpen}
+      />
+    );
+  };
+
   return (
     <View style={styles.container}>
       {/* <Image source={require('../assets/down.png')} style={styles.img} /> */}
@@ -339,29 +367,8 @@ const Main = () => {
         <Text style={styles.error}>Url can not be empty!</Text>
       )}
 
-      <DropDownPicker
-        items={folderList}
-        defaultValue={state}
-        placeholder="Select a folder..."
-        containerStyle={styles.dropmain}
-        style={styles.dropdownContainer}
-        labelStyle={styles.label}
-        selectedtLabelStyle={styles.selectedtLabelStyle}
-        searchable={true}
-        searchablePlaceholder="Search for a folder"
-        searchableError={() => (
-          <Text style={{color: HeadingColor}}>Not Found</Text>
-        )}
-        searchablePlaceholderTextColor="gray"
-        seachableStyle={{color: IconColor}}
-        itemStyle={styles.itemStyle}
-        dropDownStyle={styles.dropDownStyle}
-        onChangeItem={(item) => onChangeItem(item)}
-        arrowStyle={styles.arrowStyle}
-        arrowColor={IconColor}
-        zIndex={400}
-        onOpen={handleDropDownOpen}
-      />
+      {folderList.length > 0 && renderDropDown()}
+
       <View style={Styles.pasteContainer}>
         <TextInput
           placeholder="Enter new folder or choose from above..."

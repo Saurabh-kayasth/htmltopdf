@@ -27,7 +27,7 @@ function AddFolderComponent(props) {
     if (isValid) {
       const dataModel = new DataModel();
       const folderObj = {};
-      folderObj.folderName = folderName;
+      folderObj.folderName = folderName.toUpperCase();
       folderObj.dateTime = new Date();
       folderObj.id = new Date().getTime();
       // folderObj.files = [];
