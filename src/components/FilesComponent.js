@@ -229,7 +229,7 @@ function FilesData(props) {
         <TouchableWithoutFeedback onPress={() => goToFolder()}>
           <View style={styles.folderContainer}>
             <View style={styles.filesData}>
-              <Icon name="file" color={IconColor} size={50} />
+              <Icon name="file" color={IconColor} size={35} />
               <View style={styles.data}>
                 <Text style={styles.folderName}>{fileName}</Text>
                 <Text style={styles.description}>

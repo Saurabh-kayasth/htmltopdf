@@ -3,19 +3,21 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createStackNavigator} from '@react-navigation/stack';
 import {NavigationContainer} from '@react-navigation/native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import Home from '../screens/Home';
 import Favourites from '../screens/Favourites';
 import Sheduled from '../screens/Sheduled';
 import Folder from '../screens/Folder';
 import {
   ACTIVE_TINT_COLOR,
+  IconColor,
   INACTIVE_TINT_COLOR,
   SecondaryColor,
 } from '../constants/Theme';
 import Pdf from '../screens/Pdf';
 import Main from '../screens/Main';
 
-const Tab = createMaterialTopTabNavigator();
+const Tab = createBottomTabNavigator();
 
 function Tabs() {
   return (
@@ -32,7 +34,9 @@ function Tabs() {
           backgroundColor: SecondaryColor,
           height: 60,
           // paddingTop: 10,
-          elevation: 0,
+          elevation: 5,
+          borderTopWidth: 0.3,
+          borderTopColor: IconColor,
         },
         indicatorStyle: {
           height: 0,
@@ -109,10 +113,10 @@ const Stack = createStackNavigator();
 export default function MainStack() {
   return (
     // <NavigationContainer>
-    <Stack.Navigator initialRouteName="tabs">
+    <Stack.Navigator initialRouteName="maintabs">
       <Stack.Screen
         component={Tabs}
-        name="tabs"
+        name="maintabs"
         options={{headerShown: false}}
       />
       <Stack.Screen

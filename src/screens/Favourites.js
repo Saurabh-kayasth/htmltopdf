@@ -4,6 +4,7 @@ import FilesComponent from '../components/FilesComponent';
 import {FavFilesReducer} from '../context/FavFilesContext/FavFilesReducer';
 import {useFocusEffect} from '@react-navigation/native';
 import {Styles} from '../styles/Styles';
+import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
 
 function Favourites(props) {
   const [state, favdispatch] = useReducer(FavFilesReducer);
@@ -36,15 +37,22 @@ function Favourites(props) {
   }, [favdispatch]);
 
   return (
-    <View style={Styles.container}>
-      {state && (
-        <FilesComponent
-          navigation={props.navigation}
-          favdispatch={favdispatch}
-          files={state.files}
-        />
-      )}
-    </View>
+    <>
+      <DrawerHeaderCompponent
+        header={'Favourites'}
+        icon={'menu'}
+        navigation={props.navigation}
+      />
+      <View style={Styles.container}>
+        {state && (
+          <FilesComponent
+            navigation={props.navigation}
+            favdispatch={favdispatch}
+            files={state.files}
+          />
+        )}
+      </View>
+    </>
   );
 }
 

@@ -1,6 +1,5 @@
 import React, {useEffect, useState} from 'react';
 import {View, StyleSheet, StatusBar} from 'react-native';
-import MainStack from './src/router/router';
 import {
   SecondaryColor,
   BackgroundColor,
@@ -12,8 +11,9 @@ import DataModel from './src/Data/DataModel';
 import AppIntro from './src/screens/AppIntro';
 import AsyncStorage from '@react-native-community/async-storage';
 import {STORAGE_KEY} from './src/constants/Constants';
-import Main from './src/screens/Main';
 import MyDrawer from './src/router/drawer';
+import {ThemeContextProvider} from './src/context/ThemeContext';
+import MainStack from './src/router/router';
 
 BackgroundFetch.configure(
   {
@@ -110,8 +110,12 @@ function App() {
         barStyle={`${StatusBarContent}-content`}
       />
       {/* <MyDrawer /> */}
-      {showMainApp && !loading && <MyDrawer />}
-      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />}
+      <ThemeContextProvider>
+        {showMainApp && !loading && <MyDrawer />}
+        {!showMainApp && !loading && (
+          <AppIntro setShowMainApp={setShowMainApp} />
+        )}
+      </ThemeContextProvider>
     </View>
   );
 }
@@ -121,6 +125,6 @@ export default App;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: BackgroundColor,
+    // backgroundColor: BackgroundColor,
   },
 });

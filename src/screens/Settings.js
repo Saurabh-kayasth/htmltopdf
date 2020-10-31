@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {
   View,
   Switch,
@@ -19,10 +19,12 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LAZY_LOAD_KEY, THEME_KEY} from '../constants/Constants';
+import {ThemeContext, ThemeContextConsumer} from '../context/ThemeContext';
 
 function Settings(props) {
   const [switchValue, setSwitchValue] = useState(false);
   const [theme, setTheme] = useState('');
+  let {themeState, themeDispatch} = useContext(ThemeContext);
   // const [lazyLoad, setLazyLoad] = useState('');
 
   const handleToggle = async () => {
@@ -37,6 +39,7 @@ function Settings(props) {
 
   const onThemeSelection = async (themeName) => {
     await AsyncStorage.setItem(THEME_KEY, themeName);
+    themeDispatch({type: 'update'});
     setTheme(themeName);
   };
 
@@ -47,7 +50,6 @@ function Settings(props) {
 
   const getLazyStatus = async () => {
     const isLazyLoadEnabled = await AsyncStorage.getItem(LAZY_LOAD_KEY);
-    console.log('=================', isLazyLoadEnabled);
     if (isLazyLoadEnabled === null || isLazyLoadEnabled === undefined) {
       setSwitchValue(false);
     } else {
@@ -70,71 +72,101 @@ function Settings(props) {
   };
 
   return (
-    <View style={styles.container}>
-      <HeaderCompponent header={'Settings'} icon={'cog'} />
+    <ThemeContextConsumer>
+      {(value) => {
+        console.log('consumervale-------', value);
+        return (
+          <View style={styles.container}>
+            <HeaderCompponent header={'Settings'} icon={'cog'} />
 
-      {/* LAZY LOADING */}
-      <View style={styles.optioNMain}>
-        <View style={styles.optionContainer}>
-          <View style={styles.optionLeft}>
-            <Icon name="script-text-outline" size={20} color={IconColor} />
-            <Text style={styles.text}>Lazy Loading</Text>
-          </View>
-          <View>
-            <Switch
-              trackColor={{false: '#767577', true: '#4c6254'}}
-              thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
-              onValueChange={handleToggle}
-              value={switchValue}
-            />
-          </View>
-        </View>
-        <Text style={styles.description}>
-          If enabled it will try to open up all lazy elements but dowloading
-          speed may get slow down.
-        </Text>
-      </View>
+            {/* LAZY LOADING */}
+            <View style={styles.optioNMain}>
+              <View style={styles.optionContainer}>
+                <View style={styles.optionLeft}>
+                  <Icon
+                    name="script-text-outline"
+                    size={20}
+                    color={IconColor}
+                  />
+                  <Text style={styles.text}>Lazy Loading</Text>
+                </View>
+                <View>
+                  <Switch
+                    trackColor={{false: '#767577', true: '#4c6254'}}
+                    thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
+                    onValueChange={handleToggle}
+                    value={switchValue}
+                  />
+                </View>
+              </View>
+              <Text style={styles.description}>
+                If enabled it will try to open up all lazy elements but
+                dowloading speed may get slow down.
+              </Text>
+            </View>
 
-      {/* THEME */}
-      <View style={styles.optioNMain}>
-        <View
-          style={[
-            styles.optionContainer,
-            {flexDirection: 'column', alignItems: 'flex-start'},
-          ]}>
-          <View style={styles.optionLeft}>
-            <Icon name="tab" size={20} color={IconColor} />
-            <Text style={styles.text}>Theme</Text>
+            {/* THEME */}
+            <View style={styles.optioNMain}>
+              <View
+                style={[
+                  styles.optionContainer,
+                  // eslint-disable-next-line react-native/no-inline-styles
+                  {flexDirection: 'column', alignItems: 'flex-start'},
+                ]}>
+                <View style={styles.optionLeft}>
+                  <Icon name="tab" size={20} color={IconColor} />
+                  <Text style={styles.text}>Theme</Text>
+                </View>
+                <View style={styles.tabsContainer}>
+                  <TouchableHighlight
+                    onPress={() => onThemeSelection('DEFAULT')}
+                    style={[
+                      styles.btn,
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      {
+                        borderColor:
+                          theme === 'DEFAULT' ? '#ff5b77' : BorderColor,
+                      },
+                    ]}>
+                    <Image
+                      style={styles.img}
+                      source={require('../assets/F1.png')}
+                    />
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    style={[
+                      styles.btn,
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      {borderColor: theme === 'DARK' ? '#ff5b77' : BorderColor},
+                    ]}
+                    onPress={() => onThemeSelection('DARK')}>
+                    <Image
+                      style={styles.img}
+                      source={require('../assets/F1.png')}
+                    />
+                  </TouchableHighlight>
+                  <TouchableHighlight
+                    style={[
+                      styles.btn,
+                      // eslint-disable-next-line react-native/no-inline-styles
+                      {
+                        borderColor:
+                          theme === 'LIGHT' ? '#ff5b77' : BorderColor,
+                      },
+                    ]}
+                    onPress={() => onThemeSelection('LIGHT')}>
+                    <Image
+                      style={styles.img}
+                      source={require('../assets/F1.png')}
+                    />
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
           </View>
-          <View style={styles.tabsContainer}>
-            <TouchableHighlight
-              onPress={() => onThemeSelection('DEFAULT')}
-              style={[
-                styles.btn,
-                {borderColor: theme === 'DEFAULT' ? '#ff5b77' : BorderColor},
-              ]}>
-              <Image style={styles.img} source={require('../assets/F1.png')} />
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={[
-                styles.btn,
-                {borderColor: theme === 'DARK' ? '#ff5b77' : BorderColor},
-              ]}
-              onPress={() => onThemeSelection('DARK')}>
-              <Image style={styles.img} source={require('../assets/F1.png')} />
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={[
-                styles.btn,
-                {borderColor: theme === 'LIGHT' ? '#ff5b77' : BorderColor},
-              ]}
-              onPress={() => onThemeSelection('LIGHT')}>
-              <Image style={styles.img} source={require('../assets/F1.png')} />
-            </TouchableHighlight>
-          </View>
-        </View>
-      </View>
-    </View>
+        );
+      }}
+    </ThemeContextConsumer>
   );
 }
 
@@ -186,10 +218,6 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     borderWidth: 2,
     borderColor: BorderColor,
-    // backgroundColor: BackgroundColor,
-    // justifyContent: 'center',
-    // alignItems: 'center',
-    // padding: 15,
   },
   img: {
     width: '100%',

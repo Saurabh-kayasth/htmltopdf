@@ -14,6 +14,7 @@ import {IconColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
 import {styles} from '../styles/FilesStyles';
+import MainStack from '../router/router';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
 
 function FolderData(props) {
@@ -63,7 +64,7 @@ function FolderData(props) {
         onPress={() => goToFolder(id, folderName, dateTime)}>
         <View style={styles.folderContainer}>
           <View style={styles.filesData}>
-            <Icon name="folder" color={IconColor} size={40} />
+            <Icon name="folder" color={IconColor} size={35} />
             <View style={styles.data}>
               <Text style={styles.folderName}>{folderName}</Text>
               <Text style={styles.description}>Number of files....</Text>

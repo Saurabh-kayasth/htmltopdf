@@ -30,9 +30,10 @@ import {useNetInfo} from '@react-native-community/netinfo';
 import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LAZY_LOAD_KEY, STORAGE_KEY} from '../constants/Constants';
+import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
 // import {sub} from 'react-native-reanimated';
 
-const Main = () => {
+const Main = (props) => {
   const [fileName, setFileName] = useState('');
   const [folderName, setFolderName] = useState('');
   const [fileUrl, setFileUrl] = useState('');
@@ -351,64 +352,72 @@ const Main = () => {
   };
 
   return (
-    <View style={styles.container}>
-      {/* <Image source={require('../assets/down.png')} style={styles.img} /> */}
-      <Text style={styles.heading}>Create PDF</Text>
-      <TextInput
-        placeholder="Enter file name..."
-        placeholderTextColor={PlaceholderColor}
-        style={styles.input}
-        value={fileName}
-        onChangeText={(text) => handleFileNameChange(text)}
+    <>
+      <DrawerHeaderCompponent
+        header={'Add PDF'}
+        icon={'menu'}
+        navigation={props.navigation}
       />
-      {!validation.fileName && submitted && (
-        <Text style={styles.error}>File name can not be empty!</Text>
-      )}
+      <View style={styles.container}>
+        {/* <Image source={require('../assets/down.png')} style={styles.img} /> */}
 
-      <View style={Styles.pasteContainer}>
+        <Text style={styles.heading}>Create PDF</Text>
         <TextInput
-          placeholder="Enter URL..."
+          placeholder="Enter file name..."
           placeholderTextColor={PlaceholderColor}
-          style={[styles.input, {width: '82%', marginRight: 10}]}
-          value={fileUrl}
-          onChangeText={(text) => handleFileUrlChange(text)}
+          style={styles.input}
+          value={fileName}
+          onChangeText={(text) => handleFileNameChange(text)}
         />
-        <TouchableOpacity
-          style={Styles.paste}
-          onPress={() => fetchCopiedText()}>
-          <Icon name="content-copy" size={23} color={IconColor} />
-        </TouchableOpacity>
-      </View>
-      {!validation.fileUrl && submitted && (
-        <Text style={styles.error}>Url can not be empty!</Text>
-      )}
+        {!validation.fileName && submitted && (
+          <Text style={styles.error}>File name can not be empty!</Text>
+        )}
 
-      {folderList.length > 0 && renderDropDown()}
+        <View style={Styles.pasteContainer}>
+          <TextInput
+            placeholder="Enter URL..."
+            placeholderTextColor={PlaceholderColor}
+            style={[styles.input, {width: '82%', marginRight: 10}]}
+            value={fileUrl}
+            onChangeText={(text) => handleFileUrlChange(text)}
+          />
+          <TouchableOpacity
+            style={Styles.paste}
+            onPress={() => fetchCopiedText()}>
+            <Icon name="content-copy" size={23} color={IconColor} />
+          </TouchableOpacity>
+        </View>
+        {!validation.fileUrl && submitted && (
+          <Text style={styles.error}>Url can not be empty!</Text>
+        )}
 
-      <View style={Styles.pasteContainer}>
-        <TextInput
-          placeholder="Enter new folder or choose from above..."
-          placeholderTextColor={PlaceholderColor}
-          style={[styles.input, {width: '82%', marginRight: 10}]}
-          value={folderName}
-          onChangeText={(text) => handleFolderNameChange(text)}
+        {folderList.length > 0 && renderDropDown()}
+
+        <View style={Styles.pasteContainer}>
+          <TextInput
+            placeholder="Enter new folder or choose from above..."
+            placeholderTextColor={PlaceholderColor}
+            style={[styles.input, {width: '82%', marginRight: 10}]}
+            value={folderName}
+            onChangeText={(text) => handleFolderNameChange(text)}
+          />
+          <TouchableOpacity style={styles.btn} onPress={downloadFile}>
+            <Icon name="download" size={20} color={HeadingColor} />
+          </TouchableOpacity>
+        </View>
+        {!validation.folderName && submitted && (
+          <Text style={styles.error}>Folder name can not be empty!</Text>
+        )}
+
+        <Spinner
+          visible={spinner}
+          textContent={'Downloading...'}
+          animation="fade"
+          color="#6d8c79"
+          textStyle={{color: '#6d8c79'}}
         />
-        <TouchableOpacity style={styles.btn} onPress={downloadFile}>
-          <Icon name="download" size={20} color={HeadingColor} />
-        </TouchableOpacity>
       </View>
-      {!validation.folderName && submitted && (
-        <Text style={styles.error}>Folder name can not be empty!</Text>
-      )}
-
-      <Spinner
-        visible={spinner}
-        textContent={'Downloading...'}
-        animation="fade"
-        color="#6d8c79"
-        textStyle={{color: '#6d8c79'}}
-      />
-    </View>
+    </>
   );
 };
 

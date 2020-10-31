@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {FilesReducer} from '../context/FIlesContext/FilesReducer';
 import {Styles} from '../styles/Styles';
 import {IconColor} from '../constants/Theme';
+import MainStack from '../router/router';
 
 function Folder(props) {
   const [modalVisible, setModalVisible] = useState(false);

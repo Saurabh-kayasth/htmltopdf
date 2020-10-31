@@ -12,7 +12,7 @@ import {NavigationContainer, DrawerActions} from '@react-navigation/native';
 import Help from '../screens/Help';
 import Privacy from '../screens/Privacy';
 import Settings from '../screens/Settings';
-import {SecondaryColor} from '../constants/Theme';
+import {HeadingColor, SecondaryColor} from '../constants/Theme';
 
 const Drawer = createDrawerNavigator();
 
@@ -58,11 +58,11 @@ const MyDrawer = () => {
     <NavigationContainer>
       <Drawer.Navigator
         drawerType="back"
-        edgeWidth={100}
+        edgeWidth={0}
+        minSwipeDistance={0}
         initialRouteName="HomeStack"
         drawerContent={(props) => <CustomDrawerContent {...props} />}>
         <Drawer.Screen name="HomeStack" component={MainStack} />
-
         <Drawer.Screen name="tabs" component={MainStack} />
         <Drawer.Screen name="Settings" component={Settings} />
         <Drawer.Screen name="Help" component={Help} />
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: '#fff',
+    color: HeadingColor,
     fontWeight: 'bold',
     marginTop: 10,
   },
@@ -136,11 +136,11 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: '#898f93',
+    color: HeadingColor,
   },
   label: {
     fontSize: 18,
-    color: '#fff',
+    color: HeadingColor,
   },
   optionText: {
     fontSize: 18,

@@ -10,6 +10,7 @@ import Pdf from 'react-native-pdf';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Share from 'react-native-share';
 import {Styles} from '../styles/Styles';
+import {BackgroundColor} from '../constants/Theme';
 const {width, height} = Dimensions.get('window');
 
 function PdfFileComponent(props) {
@@ -72,11 +73,13 @@ export default PdfFileComponent;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: BackgroundColor,
   },
   pdf: {
     flex: 1,
     width: width,
     height: height,
+    backgroundColor: BackgroundColor,
   },
   dataContainer: {
     width: width - 10,

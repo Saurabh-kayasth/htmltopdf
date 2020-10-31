@@ -47,7 +47,7 @@ export const INACTIVE_TINT_COLOR = '#e5e5e5';
 // export const INACTIVE_TINT_COLOR = 'grey';
 
 export const themeObj = {
-  main: {
+  DEFAULT: {
     StatusBarContent: 'light',
     PrimaryColor: '#2b2b39',
     SecondaryColor: '#22222d',
@@ -59,7 +59,7 @@ export const themeObj = {
     ACTIVE_TINT_COLOR: '#fff',
     INACTIVE_TINT_COLOR: '#e5e5e5',
   },
-  dark: {
+  DARK: {
     StatusBarContent: 'light',
     PrimaryColor: '#2b2b39',
     SecondaryColor: '#191919',
@@ -71,7 +71,7 @@ export const themeObj = {
     ACTIVE_TINT_COLOR: '#fff',
     INACTIVE_TINT_COLOR: '#e5e5e5',
   },
-  light: {
+  LIGHT: {
     StatusBarContent: 'dark',
     PrimaryColor: '#fff',
     SecondaryColor: '#fff',
