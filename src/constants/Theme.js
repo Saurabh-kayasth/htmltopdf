@@ -2,7 +2,7 @@
 export const StatusBarContent = 'light';
 export const PrimaryColor = '#2b2b39';
 export const SecondaryColor = '#22222d';
-export const PlaceholderColor = '#40404c';
+export const PlaceholderColor = 'grey';
 export const BackgroundColor = '#2b2b39';
 export const HeadingColor = '#e5e5e5';
 export const IconColor = '#e5e5e5';

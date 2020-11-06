@@ -63,6 +63,7 @@ function Tabs() {
               color={color}
             />
           ),
+          gestureEnabled: false,
         }}
       />
       <Tab.Screen
@@ -76,6 +77,7 @@ function Tabs() {
               color={color}
             />
           ),
+          gestureEnabled: false,
         }}
       />
       <Tab.Screen
@@ -89,6 +91,7 @@ function Tabs() {
               color={color}
             />
           ),
+          gestureEnabled: false,
         }}
       />
       <Tab.Screen
@@ -102,6 +105,7 @@ function Tabs() {
               color={color}
             />
           ),
+          gestureEnabled: false,
         }}
       />
     </Tab.Navigator>
@@ -113,16 +117,19 @@ const Stack = createStackNavigator();
 export default function MainStack() {
   return (
     // <NavigationContainer>
-    <Stack.Navigator initialRouteName="maintabs">
+    <Stack.Navigator
+      initialRouteName="maintabs"
+      mode="modal"
+      screenOptions={{gestureEnabled: false}}>
       <Stack.Screen
         component={Tabs}
         name="maintabs"
-        options={{headerShown: false}}
+        options={{headerShown: false, gestureEnabled: false}}
       />
       <Stack.Screen
         component={Folder}
         name="folder"
-        options={{headerShown: false}}
+        options={{headerShown: false, gestureEnabled: false}}
       />
       <Stack.Screen component={Pdf} name="pdf" options={{headerShown: false}} />
     </Stack.Navigator>

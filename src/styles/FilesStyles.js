@@ -12,7 +12,7 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   folderContainer: {
-    width: width - 20,
+    width: '96%',
     alignSelf: 'center',
     backgroundColor: SecondaryColor,
     alignItems: 'center',

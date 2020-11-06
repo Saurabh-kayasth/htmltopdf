@@ -31,7 +31,7 @@ import {useFocusEffect} from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LAZY_LOAD_KEY, STORAGE_KEY} from '../constants/Constants';
 import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
-// import {sub} from 'react-native-reanimated';
+import {ProgressBar} from '@react-native-community/progress-bar-android';
 
 const Main = (props) => {
   const [fileName, setFileName] = useState('');
@@ -49,6 +49,8 @@ const Main = (props) => {
   });
   const [submitted, setSubmitted] = useState(false);
   const [lazyLoad, setLazyLoad] = useState();
+  const [error, setError] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   const fetchCopiedText = async () => {
     const text = await Clipboard.getString();
@@ -201,37 +203,45 @@ const Main = (props) => {
   };
 
   const actualDownload = async (id) => {
+    setError(false);
     const {dirs} = RNFetchBlob.fs;
     console.log('making request');
     let downloadUrl = `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}`;
     if (lazyLoad) {
       downloadUrl = `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=true`;
     }
-    RNFetchBlob.config({
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        mediaScannable: true,
-        title: `${fileName}_${new Date().getTime()}.pdf`,
-        path: `${
-          dirs.DCIMDir
-        }/htmlToPDF/${folderName}/${fileName}_${new Date().getTime()}.pdf`,
-      },
-    })
-      .fetch('GET', downloadUrl, {})
-      .then((res) => {
-        addFile(res.path(), id);
-        setSpinner(false);
-        ToastAndroid.showWithGravity(
-          'Downloaded successfully!',
-          ToastAndroid.SHORT,
-          ToastAndroid.BOTTOM,
-        );
+    try {
+      RNFetchBlob.config({
+        fileCache: true,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mediaScannable: true,
+          title: `${fileName}_${new Date().getTime()}.pdf`,
+          path: `${
+            dirs.DCIMDir
+          }/htmlToPDF/${folderName}/${fileName}_${new Date().getTime()}.pdf`,
+        },
       })
-      .catch((e) => {
-        setSpinner(false);
-      });
+        .fetch('GET', downloadUrl, {})
+        .then((res) => {
+          addFile(res.path(), id);
+          setSpinner(false);
+          setIsEditable(true);
+          ToastAndroid.showWithGravity(
+            'Downloaded successfully!',
+            ToastAndroid.SHORT,
+            ToastAndroid.BOTTOM,
+          );
+        })
+        .catch((e) => {
+          setError(true);
+          setSpinner(false);
+          setIsEditable(true);
+        });
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const downloadFileCheck = async (id) => {
@@ -245,6 +255,7 @@ const Main = (props) => {
       );
     } else if (connected === 'true') {
       setSpinner(true);
+      setIsEditable(false);
       try {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.WRITE_EXTERNAL_STORAGE,
@@ -257,6 +268,7 @@ const Main = (props) => {
             'You need to give storage permission to download the file',
           );
           setSpinner(false);
+          setIsEditable(true);
         }
       } catch (err) {
         console.warn(err);
@@ -351,6 +363,11 @@ const Main = (props) => {
     );
   };
 
+  const cancelDownload = () => {
+    setSpinner(false);
+    setIsEditable(true);
+  };
+
   return (
     <>
       <DrawerHeaderCompponent
@@ -358,11 +375,39 @@ const Main = (props) => {
         icon={'menu'}
         navigation={props.navigation}
       />
+      <View style={{backgroundColor: BackgroundColor}}>
+        {spinner && (
+          <ProgressBar
+            styleAttr="Horizontal"
+            color="#ff5b77"
+            style={{margin: 0, padding: 0, width: '100%'}}
+          />
+        )}
+      </View>
+
       <View style={styles.container}>
         {/* <Image source={require('../assets/down.png')} style={styles.img} /> */}
 
         <Text style={styles.heading}>Create PDF</Text>
+
+        {folderList.length > 0 && renderDropDown()}
+
+        <View style={Styles.pasteContainer}>
+          <TextInput
+            editable={isEditable}
+            placeholder="Enter new folder or choose from above..."
+            placeholderTextColor={PlaceholderColor}
+            style={[styles.input, {}]}
+            value={folderName}
+            onChangeText={(text) => handleFolderNameChange(text)}
+          />
+        </View>
+        {!validation.folderName && submitted && (
+          <Text style={styles.error}>Folder name can not be empty!</Text>
+        )}
+
         <TextInput
+          editable={isEditable}
           placeholder="Enter file name..."
           placeholderTextColor={PlaceholderColor}
           style={styles.input}
@@ -375,13 +420,15 @@ const Main = (props) => {
 
         <View style={Styles.pasteContainer}>
           <TextInput
-            placeholder="Enter URL..."
+            editable={isEditable}
+            placeholder="Enter URL Eg. http://www.example.com"
             placeholderTextColor={PlaceholderColor}
             style={[styles.input, {width: '82%', marginRight: 10}]}
             value={fileUrl}
             onChangeText={(text) => handleFileUrlChange(text)}
           />
           <TouchableOpacity
+            disabled={!isEditable}
             style={Styles.paste}
             onPress={() => fetchCopiedText()}>
             <Icon name="content-copy" size={23} color={IconColor} />
@@ -391,31 +438,42 @@ const Main = (props) => {
           <Text style={styles.error}>Url can not be empty!</Text>
         )}
 
-        {folderList.length > 0 && renderDropDown()}
-
-        <View style={Styles.pasteContainer}>
-          <TextInput
-            placeholder="Enter new folder or choose from above..."
-            placeholderTextColor={PlaceholderColor}
-            style={[styles.input, {width: '82%', marginRight: 10}]}
-            value={folderName}
-            onChangeText={(text) => handleFolderNameChange(text)}
-          />
-          <TouchableOpacity style={styles.btn} onPress={downloadFile}>
-            <Icon name="download" size={20} color={HeadingColor} />
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.btn} onPress={cancelDownload}>
+            <View style={styles.btnIn}>
+              <Icon
+                name="cancel"
+                size={16}
+                color={HeadingColor}
+                style={{marginRight: 10}}
+              />
+              <Text style={styles.heading}>Cancel</Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.btn, {backgroundColor: '#ff5b77'}]}
+            onPress={downloadFile}
+            disabled={!isEditable}>
+            <View style={[styles.btnIn]}>
+              <Icon
+                name="download"
+                size={16}
+                color={HeadingColor}
+                style={{marginRight: 10}}
+              />
+              <Text style={styles.heading}>Download</Text>
+            </View>
           </TouchableOpacity>
         </View>
-        {!validation.folderName && submitted && (
-          <Text style={styles.error}>Folder name can not be empty!</Text>
-        )}
+        {error && <Text style={styles.error}>Download Failed</Text>}
 
-        <Spinner
+        {/* <Spinner
           visible={spinner}
           textContent={'Downloading...'}
           animation="fade"
           color="#6d8c79"
           textStyle={{color: '#6d8c79'}}
-        />
+        /> */}
       </View>
     </>
   );
@@ -445,9 +503,9 @@ const styles = StyleSheet.create({
     color: HeadingColor,
   },
   btn: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
+    width: '47%',
+    height: 45,
+    borderRadius: 10,
     elevation: 10,
     justifyContent: 'center',
     alignContent: 'center',
@@ -494,4 +552,11 @@ const styles = StyleSheet.create({
   error: {
     color: 'red',
   },
+  btnContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 10,
+    marginTop: 10,
+  },
+  btnIn: {flexDirection: 'row', alignItems: 'center'},
 });

@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   RefreshControl,
   Switch,
+  Dimensions,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
@@ -17,6 +18,7 @@ import moment from 'moment';
 import DataModel from '../Data/DataModel';
 import {styles} from '../styles/FilesStyles';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const {width} = Dimensions.get('window');
 
 function FilesData(props) {
   const {
@@ -231,7 +233,11 @@ function FilesData(props) {
             <View style={styles.filesData}>
               <Icon name="file" color={IconColor} size={35} />
               <View style={styles.data}>
-                <Text style={styles.folderName}>{fileName}</Text>
+                <Text
+                  style={[styles.folderName, {width: width - 220}]}
+                  numberOfLines={1}>
+                  {fileName}
+                </Text>
                 <Text style={styles.description}>
                   {switchValue ? getFormattedDate(date, time) : 'Not Scheduled'}
                 </Text>
@@ -239,44 +245,16 @@ function FilesData(props) {
             </View>
 
             <View style={styles.dateTime}>
-              {/* <Text style={styles.dateTimeText}> */}
-              {/* {moment(new Date(dateTime)).format('DD/MM/YY')} */}
-              {/* {isScheduled ? (
-                  <OptionsMenu
-                    customButton={<Icon name="menu" size={25} color="#000" />}
-                    options={['Delete', 'Unshedule']}
-                    actions={[deleteFile, unshedule]}
-                  />
-                ) : (
-                  <OptionsMenu
-                    customButton={<Icon name="menu" size={25} color="#000" />}
-                    options={['Delete', 'Schedule']}
-                    actions={[
-                      deleteFile,
-                      // addToFav,
-                      setSelectedAndPickerModeAndOpenPicker,
-                    ]}
-                  />
-                )} */}
-              <View style={{flexDirection: 'row'}}>
-                <Icon name="clock" color="#40404c" size={25} />
+              <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                <Icon name="clock" color="#40404c" size={22} />
                 <Switch
-                  trackColor={{false: '#767577', true: '#4c6254'}}
-                  thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
+                  trackColor={{false: '#767577', true: '#cc485f'}}
+                  thumbColor={switchValue ? '#ff5b77' : '#f4f3f4'}
                   // style={{marginTop: 30}}
                   onValueChange={handleToggle}
                   value={switchValue}
                 />
-                {/* <Icon name="clock" color="#4c6254" size={25} />
-                  <Switch
-                    trackColor={{false: '#767577', true: '#4c6254'}}
-                    thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
-                    // style={{marginTop: 30}}
-                    onValueChange={handleToggle}
-                    value={switchValue}
-                  /> */}
               </View>
-              {/* </Text> */}
               <Text style={styles.dateTimeText}>
                 {moment(new Date(dateTime)).calendar()}
               </Text>

@@ -14,7 +14,7 @@
     "@react-native-community/datetimepicker": "^3.0.1",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native-community/netinfo": "^5.9.7",
-    "@react-native-community/progress-bar-android": "^1.0.2",
+    "@react-native-community/progress-bar-android": "^1.0.4",
     "@react-native-community/toolbar-android": "0.1.0-rc.2",
     "@react-navigation/bottom-tabs": "^5.10.2",
     "@react-navigation/drawer": "^5.5.0",

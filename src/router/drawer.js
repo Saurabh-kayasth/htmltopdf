@@ -21,7 +21,10 @@ function CustomDrawerContent(props) {
     <View style={styles.drawerContainer}>
       <DrawerContentScrollView {...props}>
         <View style={styles.topContainer}>
-          <Image source={require('../assets/F1.png')} style={styles.profile} />
+          <Image
+            source={require('../assets/icon.png')}
+            style={styles.profile}
+          />
           <View>
             <Text style={styles.title}>WPC</Text>
           </View>
@@ -42,11 +45,11 @@ function CustomDrawerContent(props) {
           onPress={() => props.navigation.navigate('Help')}
           icon={() => <Icon name="help-circle" size={22} color="#898f93" />}
         />
-        <DrawerItem
+        {/* <DrawerItem
           label={() => <Text style={styles.label}>Privacy</Text>}
           onPress={() => props.navigation.navigate('Privacy')}
           icon={() => <Icon name="vpn" size={22} color="#898f93" />}
-        />
+        /> */}
       </DrawerContentScrollView>
     </View>
   );

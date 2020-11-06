@@ -12,7 +12,6 @@ import AppIntro from './src/screens/AppIntro';
 import AsyncStorage from '@react-native-community/async-storage';
 import {STORAGE_KEY} from './src/constants/Constants';
 import MyDrawer from './src/router/drawer';
-import {ThemeContextProvider} from './src/context/ThemeContext';
 import MainStack from './src/router/router';
 
 BackgroundFetch.configure(
@@ -110,12 +109,8 @@ function App() {
         barStyle={`${StatusBarContent}-content`}
       />
       {/* <MyDrawer /> */}
-      <ThemeContextProvider>
-        {showMainApp && !loading && <MyDrawer />}
-        {!showMainApp && !loading && (
-          <AppIntro setShowMainApp={setShowMainApp} />
-        )}
-      </ThemeContextProvider>
+      {showMainApp && !loading && <MyDrawer />}
+      {!showMainApp && !loading && <AppIntro setShowMainApp={setShowMainApp} />}
     </View>
   );
 }

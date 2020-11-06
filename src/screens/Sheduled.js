@@ -5,6 +5,7 @@ import {ShedFilesReducer} from '../context/ShedFilesContext/ShedFilesReducer';
 import {useFocusEffect} from '@react-navigation/native';
 import {Styles} from '../styles/Styles';
 import DrawerHeaderCompponent from '../components/DrawerHeaderComponent';
+import NoFilesComponent from '../components/NoFilesComponent';
 
 function Sheduled(props) {
   const [state, sheddispatch] = useReducer(ShedFilesReducer);
@@ -38,10 +39,11 @@ function Sheduled(props) {
   return (
     <>
       <DrawerHeaderCompponent
-        header={'Scheduled FIles'}
+        header={'Scheduled Files'}
         icon={'menu'}
         navigation={props.navigation}
       />
+      {/* {state.files.length < 1 && <NoFilesComponent />} */}
       <View style={Styles.container}>
         {state && (
           <FilesComponent

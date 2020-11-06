@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableHighlight,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import HeaderCompponent from '../components/HeaderComponent';
 import {
@@ -19,12 +20,9 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import AsyncStorage from '@react-native-community/async-storage';
 import {LAZY_LOAD_KEY, THEME_KEY} from '../constants/Constants';
-import {ThemeContext, ThemeContextConsumer} from '../context/ThemeContext';
 
 function Settings(props) {
   const [switchValue, setSwitchValue] = useState(false);
-  const [theme, setTheme] = useState('');
-  let {themeState, themeDispatch} = useContext(ThemeContext);
   // const [lazyLoad, setLazyLoad] = useState('');
 
   const handleToggle = async () => {
@@ -37,14 +35,14 @@ function Settings(props) {
     setSwitchValue(!switchValue);
   };
 
-  const onThemeSelection = async (themeName) => {
-    await AsyncStorage.setItem(THEME_KEY, themeName);
-    themeDispatch({type: 'update'});
-    setTheme(themeName);
-  };
+  // const onThemeSelection = async (themeName) => {
+  //   await AsyncStorage.setItem(THEME_KEY, themeName);
+  //   themeDispatch({type: 'update'});
+  //   setTheme(themeName);
+  // };
 
   useEffect(() => {
-    getTheme();
+    // getTheme();
     getLazyStatus();
   }, []);
 
@@ -61,52 +59,63 @@ function Settings(props) {
     }
   };
 
-  const getTheme = async () => {
-    const themeName = await AsyncStorage.getItem(THEME_KEY);
-    console.log(themeName);
-    if (themeName === null || themeName === undefined) {
-      setTheme('DEFAULT');
-    } else {
-      setTheme(themeName);
-    }
+  const goToPrivacy = () => {
+    props.navigation.navigate('Privacy');
   };
 
+  // const getTheme = async () => {
+  //   const themeName = await AsyncStorage.getItem(THEME_KEY);
+  //   console.log(themeName);
+  //   if (themeName === null || themeName === undefined) {
+  //     setTheme('DEFAULT');
+  //   } else {
+  //     setTheme(themeName);
+  //   }
+  // };
+
   return (
-    <ThemeContextConsumer>
-      {(value) => {
-        console.log('consumervale-------', value);
-        return (
-          <View style={styles.container}>
-            <HeaderCompponent header={'Settings'} icon={'cog'} />
+    <View style={styles.container}>
+      <HeaderCompponent header={'Settings'} icon={'cog'} />
 
-            {/* LAZY LOADING */}
-            <View style={styles.optioNMain}>
-              <View style={styles.optionContainer}>
-                <View style={styles.optionLeft}>
-                  <Icon
-                    name="script-text-outline"
-                    size={20}
-                    color={IconColor}
-                  />
-                  <Text style={styles.text}>Lazy Loading</Text>
-                </View>
-                <View>
-                  <Switch
-                    trackColor={{false: '#767577', true: '#4c6254'}}
-                    thumbColor={switchValue ? '#6d8c79' : '#f4f3f4'}
-                    onValueChange={handleToggle}
-                    value={switchValue}
-                  />
-                </View>
-              </View>
-              <Text style={styles.description}>
-                If enabled it will try to open up all lazy elements but
-                dowloading speed may get slow down.
-              </Text>
-            </View>
+      {/* LAZY LOADING */}
+      <View style={styles.optioNMain}>
+        <View style={styles.optionContainer}>
+          <View style={styles.optionLeft}>
+            <Icon name="script-text-outline" size={20} color={IconColor} />
+            <Text style={styles.text}>Lazy Loading</Text>
+          </View>
+          <View>
+            <Switch
+              trackColor={{false: '#767577', true: '#cc485f'}}
+              thumbColor={switchValue ? '#ff5b77' : '#f4f3f4'}
+              onValueChange={handleToggle}
+              value={switchValue}
+            />
+          </View>
+        </View>
+        <Text style={styles.description}>
+          If enabled it will try to open up all lazy elements but dowloading
+          speed may get slow down.
+        </Text>
+      </View>
 
-            {/* THEME */}
-            <View style={styles.optioNMain}>
+      {/* LAZY LOADING */}
+      <Text style={{marginLeft: 15, color: '#b2b2b7', marginTop: 10}}>
+        Other
+      </Text>
+      <TouchableHighlight
+        style={[styles.optioNMain, {paddingBottom: 15}]}
+        onPress={goToPrivacy}>
+        <View style={styles.optionContainer}>
+          <View style={styles.optionLeft}>
+            <Icon name="vpn" size={20} color={IconColor} />
+            <Text style={styles.text}>Privacy</Text>
+          </View>
+        </View>
+      </TouchableHighlight>
+
+      {/* THEME */}
+      {/* <View style={styles.optioNMain}>
               <View
                 style={[
                   styles.optionContainer,
@@ -162,11 +171,8 @@ function Settings(props) {
                   </TouchableHighlight>
                 </View>
               </View>
-            </View>
-          </View>
-        );
-      }}
-    </ThemeContextConsumer>
+            </View> */}
+    </View>
   );
 }
 

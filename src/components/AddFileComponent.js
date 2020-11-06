@@ -23,6 +23,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Spinner from 'react-native-loading-spinner-overlay';
 import {Styles} from '../styles/Styles';
 import {useNetInfo} from '@react-native-community/netinfo';
+import {ProgressBar} from '@react-native-community/progress-bar-android';
 
 function AddFileComponent(props) {
   console.log(props);
@@ -35,8 +36,12 @@ function AddFileComponent(props) {
     fileUrl: false,
   });
   const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState(false);
+  const [isEditable, setIsEditable] = useState(true);
 
   const closeModal = () => {
+    setSpinner(false);
+    setIsEditable(true);
     props.setModalVisible(false);
   };
 
@@ -62,31 +67,50 @@ function AddFileComponent(props) {
 
   const actualDownload = async () => {
     const {dirs} = RNFetchBlob.fs;
+    setError(false);
     console.log('making request');
-    RNFetchBlob.config({
-      fileCache: true,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        mediaScannable: true,
-        title: 'demosss.pdf',
-        path: `${dirs.DCIMDir}/htmlToPDF/${
-          props.folderName
-        }/${fileName}_${new Date().getTime()}.pdf`,
-      },
-    })
-      .fetch(
-        'GET',
-        `https://webtopdfapi.herokuapp.com/api/render?url=${fileUrl}&scrollPage=True`,
-        {},
-      )
-      .then((res) => {
-        addFile(res.path());
-        setSpinner(false);
+    try {
+      RNFetchBlob.config({
+        fileCache: true,
+        addAndroidDownloads: {
+          useDownloadManager: true,
+          notification: true,
+          mediaScannable: true,
+          title: fileName,
+          path: `${dirs.DCIMDir}/htmlToPDF/${
+            props.folderName
+          }/${fileName}_${new Date().getTime()}.pdf`,
+        },
       })
-      .catch((e) => {
-        setSpinner(false);
-      });
+        .fetch(
+          'GET',
+          `https://webapipdf.herokuapp.com/api/render?url=${fileUrl}&scrollPage=True`,
+          {'Content-Type': 'octet-stream'},
+        )
+        .uploadProgress((written, total) => {
+          console.log('uploaded', written / total);
+        })
+        // listen to download progress event
+        .progress((received, total) => {
+          console.log('progress', received / total);
+        })
+        .then((res) => {
+          console.log('--------succ---------');
+          console.log(res);
+          addFile(res.path());
+          setSpinner(false);
+          setIsEditable(true);
+        })
+        .catch((errorMessage, statusCode) => {
+          console.log('----------err-------');
+          console.log(errorMessage, statusCode);
+          setError(true);
+          setSpinner(false);
+          setIsEditable(true);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   const downloadFile = async () => {
@@ -103,6 +127,7 @@ function AddFileComponent(props) {
           ToastAndroid.CENTER,
         );
       } else if (connected === 'true') {
+        setIsEditable(false);
         setSpinner(true);
         try {
           const granted = await PermissionsAndroid.request(
@@ -116,6 +141,7 @@ function AddFileComponent(props) {
               'You need to give storage permission to download the file',
             );
             setSpinner(false);
+            setIsEditable(true);
           }
         } catch (err) {
           console.warn(err);
@@ -184,8 +210,17 @@ function AddFileComponent(props) {
         onRequestClose={() => closeModal()}>
         <View style={Styles.modelContainer}>
           <View style={Styles.formContainer}>
-            <Text style={Styles.heading}>ADD FILE</Text>
+            {spinner && (
+              <ProgressBar
+                styleAttr="Horizontal"
+                color="#ff5b77"
+                style={{margin: 0, padding: 0, width: '100%'}}
+              />
+            )}
+
+            <Text style={[Styles.heading, {marginTop: 10}]}>ADD FILE</Text>
             <TextInput
+              editable={isEditable}
               placeholder="Enter file name..."
               placeholderTextColor={PlaceholderColor}
               style={Styles.input}
@@ -198,13 +233,15 @@ function AddFileComponent(props) {
 
             <View style={Styles.pasteContainer}>
               <TextInput
-                placeholder="Enter URL..."
+                editable={isEditable}
+                placeholder="Enter URL Eg. http://www.example.com"
                 placeholderTextColor={PlaceholderColor}
                 style={[Styles.input, {width: '82%', marginRight: 10}]}
                 value={fileUrl}
                 onChangeText={(text) => handleFileUrlChange(text)}
               />
               <TouchableOpacity
+                disabled={!isEditable}
                 style={Styles.paste}
                 onPress={() => fetchCopiedText()}>
                 <Icon name="content-copy" size={23} color="#fff" />
@@ -213,6 +250,7 @@ function AddFileComponent(props) {
             {!validation.fileUrl && submitted && (
               <Text style={styles.error}>Url can not be empty!</Text>
             )}
+            {error && <Text style={styles.error}>Download Failed</Text>}
             <View style={Styles.btnContainer}>
               <TouchableOpacity
                 style={[Styles.submitBtn, {backgroundColor: SecondaryColor}]}
@@ -222,6 +260,7 @@ function AddFileComponent(props) {
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
+                disabled={!isEditable}
                 style={Styles.submitBtn}
                 onPress={() => downloadFile()}>
                 <Text style={Styles.btnText}>ADD</Text>
@@ -230,13 +269,13 @@ function AddFileComponent(props) {
           </View>
         </View>
       </Modal>
-      <Spinner
+      {/* <Spinner
         visible={spinner}
         textContent={'Downloading...'}
         animation="fade"
         color="#6d8c79"
         textStyle={{color: '#6d8c79'}}
-      />
+      /> */}
     </>
   );
 }

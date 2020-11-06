@@ -66,7 +66,9 @@ function FolderData(props) {
           <View style={styles.filesData}>
             <Icon name="folder" color={IconColor} size={35} />
             <View style={styles.data}>
-              <Text style={styles.folderName}>{folderName}</Text>
+              <Text style={styles.folderName} numberOfLines={1}>
+                {folderName}
+              </Text>
               <Text style={styles.description}>Number of files....</Text>
             </View>
           </View>

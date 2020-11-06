@@ -64,12 +64,12 @@ export const Styles = StyleSheet.create({
     paddingBottom: 20,
   },
   formContainer: {
-    width: width - 30,
+    width: '95%',
     backgroundColor: SecondaryColor,
     alignSelf: 'center',
     borderRadius: 10,
     padding: 15,
-    paddingTop: 10,
+    paddingTop: 0,
     justifyContent: 'center',
   },
   heading: {
@@ -90,7 +90,7 @@ export const Styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#6d8c79',
+    backgroundColor: '#ff5b77',
     borderRadius: 5,
   },
   btnText: {
