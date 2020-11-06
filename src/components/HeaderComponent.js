@@ -7,7 +7,9 @@ function HeaderCompponent(props) {
   return (
     <View style={styles.container}>
       <Icon name={props.icon} size={25} color={HeadingColor} />
-      <Text style={styles.header}>{props.header}</Text>
+      <Text style={styles.header} numberOfLines={1}>
+        {props.header}
+      </Text>
       {/* <View>
         <Icon name="md-more" size={25} color="#fff" />
       </View> */}

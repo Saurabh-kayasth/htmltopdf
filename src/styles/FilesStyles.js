@@ -19,14 +19,14 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     marginTop: 10,
     padding: 10,
-    paddingLeft: 5,
     borderRadius: 10,
     justifyContent: 'space-between',
   },
   filesData: {
     flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
+    width: '60%',
+    // backgroundColor: 'red',
   },
   folderName: {
     fontSize: 16,
@@ -36,6 +36,7 @@ export const styles = StyleSheet.create({
   },
   data: {
     marginLeft: 10,
+    width: '80%',
   },
   description: {
     fontSize: 15,
@@ -62,7 +63,9 @@ export const styles = StyleSheet.create({
     borderBottomLeftRadius: 10,
   },
   dateTime: {
-    justifyContent: 'center',
+    width: '40%',
+    // backgroundColor: 'red',
+    // justifyContent: 'center',
     alignItems: 'flex-end',
   },
   dateTimeText: {

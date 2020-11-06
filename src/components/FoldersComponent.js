@@ -14,8 +14,8 @@ import {IconColor} from '../constants/Theme';
 import moment from 'moment';
 import DataModel from '../Data/DataModel';
 import {styles} from '../styles/FilesStyles';
-import MainStack from '../router/router';
 const AnimatedIcon = Animated.createAnimatedComponent(Icon);
+const {width} = Dimensions.get('window');
 
 function FolderData(props) {
   const goToFolder = (id, folderName, dateTime) => {
@@ -66,9 +66,10 @@ function FolderData(props) {
           <View style={styles.filesData}>
             <Icon name="folder" color={IconColor} size={35} />
             <View style={styles.data}>
-              <Text style={styles.folderName} numberOfLines={1}>
+              <Text style={[styles.folderName, {}]} numberOfLines={1}>
                 {folderName}
               </Text>
+
               <Text style={styles.description}>Number of files....</Text>
             </View>
           </View>
@@ -76,7 +77,7 @@ function FolderData(props) {
             <Text style={styles.dateTimeText}>
               {moment(new Date(dateTime)).format('DD/MM/YY')}
             </Text>
-            <Text style={styles.dateTimeText}>
+            <Text style={styles.dateTimeText} numberOfLines={1}>
               {moment(new Date(dateTime)).calendar()}
             </Text>
           </View>

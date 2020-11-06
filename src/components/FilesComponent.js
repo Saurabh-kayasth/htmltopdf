@@ -233,9 +233,7 @@ function FilesData(props) {
             <View style={styles.filesData}>
               <Icon name="file" color={IconColor} size={35} />
               <View style={styles.data}>
-                <Text
-                  style={[styles.folderName, {width: width - 220}]}
-                  numberOfLines={1}>
+                <Text style={styles.folderName} numberOfLines={1}>
                   {fileName}
                 </Text>
                 <Text style={styles.description}>
